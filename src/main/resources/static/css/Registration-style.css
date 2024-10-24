@@ -7,7 +7,6 @@
 }
 
 body{
-    background-image: url("../jpg/bg-img.jpg");
     background-size: cover;      /* Wypełnia tło, zachowując proporcje */
     background-position: center;  /* Wyśrodkowuje obraz */
     background-repeat: no-repeat;

@@ -3,8 +3,7 @@ package com.ww.WagerWave.Model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
-import org.hibernate.annotations.CollectionId;
-import org.springframework.boot.autoconfigure.web.WebProperties;
+import lombok.Builder;
 
 import java.util.Date;
 
@@ -16,6 +15,7 @@ Domyślnie ta 2 adnotacja nie jest podana i wtedy zostanie stworzona tabela o ta
  */
 @Entity
 @Table(name = "Users")
+@Builder
 public class User {
     /*
     Określnie sposobu generacji primary key (AUTO-INCREMENT) oraz @Id wskazuja na klucz główny.
