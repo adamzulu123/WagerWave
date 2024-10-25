@@ -54,22 +54,22 @@ public class SecurityConfig {
             .anyRequest().authenticated() - to powoduje, że każdy inny zasbów/url/strona, która nie znajduję
             się wyżej w wyjątkach, wymaga aby użytkownik byl uwierzytelniony inaczej nie ma do niej dostępu.
              */
-            return http
-                    .authorizeHttpRequests(authorizeRequests ->{
-                        authorizeRequests.requestMatchers("/registration", "/register", "/css/**","/js/**" ).permitAll();
-                        authorizeRequests.anyRequest().authenticated(); //każda inna musi być uwierzytelniony użytkownik
-                    })
-                    //konfiguracja ustawien logowania
-                    .formLogin(form -> form
-                            .loginPage("/registration") //własna strona do logowania
-                            .loginProcessingUrl("/login")
-                            .defaultSuccessUrl("/", true) //po zalogowaniu, przekierowania na główna strone
-                            .failureUrl("/registration.html?error=true") //w przypadku bledu ponowani strona registration
-                    )
-                    .logout(config -> config
-                            .logoutSuccessUrl("/registration")) //po wylogownaniu powrót na strone do rejestracji
+        return http
+                .authorizeHttpRequests(authorizeRequests ->{
+                    authorizeRequests.requestMatchers("/registration", "/register", "/css/**","/js/**" ).permitAll();
+                    authorizeRequests.anyRequest().authenticated(); //każda inna musi być uwierzytelniony użytkownik
+                })
+                //konfiguracja ustawien logowania
+                .formLogin(form -> form
+                        .loginPage("/registration") //własna strona do logowania
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/", true) //po zalogowaniu, przekierowania na główna strone
+                        .failureUrl("/registration.html?error=true") //w przypadku bledu ponowani strona registration
+                )
+                .logout(config -> config
+                        .logoutSuccessUrl("/registration")) //po wylogownaniu powrót na strone do rejestracji
 
-                    .build(); //utworzenie i zwrocenie obiektu
+                .build(); //utworzenie i zwrocenie obiektu
     }
 }
 /*

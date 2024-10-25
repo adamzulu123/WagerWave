@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /*
 @Entity wskazuje, że ta klasa jest encja (reprezentacja tabeli w bazie danych), dzięki temu hibernate wie,
@@ -31,19 +31,23 @@ public class MyUser {
     private int id;
 
     @Column(name = "first_name", nullable = false)
-    private String name;
+    private String firstName;
     @Column(name = "last_name", nullable = false)
-    private String last_name;
+    private String lastName;
     @Column(name ="email", nullable = false)
     private String email;
     @Column(name ="password", nullable = false)
     private String password;
-    @Column(name ="created_at", nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+
+
     @Column(name = "age", nullable = false)
     private int age;
-    @Column(nullable = false, length = 1)
+
+    @Column(name="gender", nullable = false, length = 1)
     @Pattern(regexp = "M|F", message = "Gender must be 'M' or 'F'")
     private String gender;
     @Column(name = "verified_status")
@@ -51,6 +55,7 @@ public class MyUser {
 
     //wymagany przez jpa i hibernate
     public MyUser() {
+        this.createdAt = LocalDateTime.now();
     }
 
 }
