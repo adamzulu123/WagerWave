@@ -16,7 +16,7 @@ Domyślnie ta 2 adnotacja nie jest podana i wtedy zostanie stworzona tabela o ta
 @Entity
 @Table(name = "Users")
 @Builder
-public class User {
+public class MyUser {
     /*
     Określnie sposobu generacji primary key (AUTO-INCREMENT) oraz @Id wskazuja na klucz główny.
     */
@@ -44,10 +44,10 @@ public class User {
     private Boolean verified;
 
     //wymagany przez jpa i hibernate
-    public User() {
+    public MyUser() {
     }
 
-    public User(int id, String name, String last_name, String email, String password, Date createdAt, int age, String gender, Boolean verified) {
+    public MyUser(int id, String name, String last_name, String email, String password, Date createdAt, int age, String gender, Boolean verified) {
         this.id = id;
         this.name = name;
         this.last_name = last_name;

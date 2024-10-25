@@ -1,17 +1,17 @@
 package com.ww.WagerWave.Services;
 
-import com.ww.WagerWave.Model.User;
+import com.ww.WagerWave.Model.MyUser;
 import com.ww.WagerWave.Repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Optional;
-
 
 /*
 @Service - uznacza ze ta klasa to kompoment serwisowy Stringa, czyli przez niego bedziemy wskrzykiwali
@@ -21,7 +21,7 @@ czy Controller za prezentacje.
 
 implements UserDetailsService - interfejs SpringSecurity pozwalajacy ładować uzytkownika, u nas na podstawie email
 
-(do ogarniecia jutro)
+(do opisanai jak zadziała )
 
  */
 
@@ -35,18 +35,17 @@ public class UserServices implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> user =userRepository.findByEmail(email); //zwracamy użytkownika na podstawie email
+        Optional<MyUser> user =userRepository.findByEmail(email); //zwracamy użytkownika na podstawie email
 
         /*
         isPresent() - sprawdza czy obiekt Optional nie jest pusty
          */
         if (user.isPresent()) {
             var userObj = user.get();
-            return new org.springframework.security.core.userdetails.User(
-                    userObj.getEmail(),
-                    userObj.getPassword(),
-                    new ArrayList<>() // Pusta lista uprawnień, dodaj uprawnienia, jeśli są
-            );
+            return User.builder()
+                    .username(userObj.getEmail())
+                    .password(userObj.getPassword())
+                    .build();
         }
         else{
             throw new UsernameNotFoundException(email);

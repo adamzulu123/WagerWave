@@ -1,9 +1,16 @@
 package com.ww.WagerWave.Security;
 
+import com.ww.WagerWave.Services.UserServices;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 /*
 @Configuration - oznacza, że tak klasa to źrodlo definicji beanów oraz oznacza ze za pomoca
@@ -13,10 +20,28 @@ tej klasy będa odbywała configuracja springsecurity.
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor //automatyczne generowanie kontruktora ktory zawiera wsztkie elementy klasy
 public class SecurityConfig {
+
+    @Autowired
+    private final UserServices userServices;
+
+    @Bean
+    public UserDetailsService getUserDetailsService() {
+        return userServices;
+    }
+
+    @Bean
+    public AuthenticationProvider getAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userServices);
+        return provider;
+    }
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
             /*
             metoda authorizeHttpRequests - pozwala na konfigurowanie żądań na poziomie żądań HTTP
 
@@ -29,7 +54,6 @@ public class SecurityConfig {
             .anyRequest().authenticated() - to powoduje, że każdy inny zasbów/url/strona, która nie znajduję
             się wyżej w wyjątkach, wymaga aby użytkownik byl uwierzytelniony inaczej nie ma do niej dostępu.
              */
-
             return http
                     .authorizeHttpRequests(authorizeRequests ->{
                         authorizeRequests.requestMatchers("/registration", "/css/**","/js/**" ).permitAll();
