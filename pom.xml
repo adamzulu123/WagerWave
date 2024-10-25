@@ -30,7 +30,7 @@
 		<java.version>21</java.version>
 		<flyway.url>jdbc:mysql://mysql-1c515400-wagerwave-db.j.aivencloud.com:27139/WagerWave_db</flyway.url>
 		<flyway.user>WWdeveloper</flyway.user>
-		<!--<flyway.password>"${PASS}"</flyway.password>-->
+
 	</properties>
 
 
