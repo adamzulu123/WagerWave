@@ -56,15 +56,25 @@ public class SecurityConfig {
              */
             return http
                     .authorizeHttpRequests(authorizeRequests ->{
-                        authorizeRequests.requestMatchers("/registration", "/css/**","/js/**" ).permitAll();
+                        authorizeRequests.requestMatchers("/registration", "/register", "/css/**","/js/**" ).permitAll();
                         authorizeRequests.anyRequest().authenticated(); //każda inna musi być uwierzytelniony użytkownik
                     })
                     //konfiguracja ustawien logowania
                     .formLogin(form -> form
                             .loginPage("/registration") //własna strona do logowania
+                            .loginProcessingUrl("/login")
                             .defaultSuccessUrl("/", true) //po zalogowaniu, przekierowania na główna strone
+                            .failureUrl("/registration.html?error=true") //w przypadku bledu ponowani strona registration
                     )
-                    .logout(config -> config.logoutSuccessUrl("/")) //po wylogownaniu tez powrót na glówna
+                    .logout(config -> config
+                            .logoutSuccessUrl("/registration")) //po wylogownaniu powrót na strone do rejestracji
+
                     .build(); //utworzenie i zwrocenie obiektu
     }
 }
+/*
+.loginProcessingUrl("/login") - dzięki temu SpringSecurity wie na jaki adres URL powinien zostać przesłany
+formularz logowania, w celu przetworzenia uwierzytelniania. Spring Sec przchwytuje to żadanie i przetwarza.
+
+
+ */
