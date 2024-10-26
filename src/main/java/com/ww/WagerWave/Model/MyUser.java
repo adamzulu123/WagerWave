@@ -19,9 +19,9 @@ Domyślnie ta 2 adnotacja nie jest podana i wtedy zostanie stworzona tabela o ta
 @Getter
 @Setter
 @Entity
-@Table(name = "Users")
 @Builder
 @AllArgsConstructor
+@Table(name = "Users")
 public class MyUser {
     /*
     Określnie sposobu generacji primary key (AUTO-INCREMENT) oraz @Id wskazuja na klucz główny.
@@ -50,7 +50,7 @@ public class MyUser {
     @Column(name="gender", nullable = false, length = 1)
     @Pattern(regexp = "M|F", message = "Gender must be 'M' or 'F'")
     private String gender;
-    @Column(name = "verified_status")
+    @Column(name = "verified_status", columnDefinition = "BIT")
     private Boolean verified;
 
     //wymagany przez jpa i hibernate

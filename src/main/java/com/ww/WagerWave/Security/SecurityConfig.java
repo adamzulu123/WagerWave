@@ -38,6 +38,8 @@ public class SecurityConfig {
         return provider;
     }
 
+    //dodac PasswordEncoder aby działalo logowanie
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -63,7 +65,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/registration") //własna strona do logowania
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/", true) //po zalogowaniu, przekierowania na główna strone
+                        .defaultSuccessUrl("/Main.html", true) //po zalogowaniu, przekierowania na główna strone
                         .failureUrl("/registration.html?error=true") //w przypadku bledu ponowani strona registration
                 )
                 .logout(config -> config
