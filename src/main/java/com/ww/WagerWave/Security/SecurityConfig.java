@@ -72,7 +72,7 @@ public class SecurityConfig {
                         .loginPage("/registration") //własna strona do logowania
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/Main", true) //po zalogowaniu, przekierowania na główna strone
-                        .failureUrl("/registration.html?error=true") //w przypadku bledu ponowani strona registration
+                        .failureUrl("/registration?error=true") //w przypadku bledu ponowani strona registration
                 )
                 .logout(config -> config
                         .logoutSuccessUrl("/registration")) //po wylogownaniu powrót na strone do rejestracji

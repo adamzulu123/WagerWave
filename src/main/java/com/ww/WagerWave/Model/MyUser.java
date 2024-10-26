@@ -8,7 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /*
 @Entity wskazuje, że ta klasa jest encja (reprezentacja tabeli w bazie danych), dzięki temu hibernate wie,
@@ -34,7 +36,8 @@ public class MyUser {
     private String firstName;
     @Column(name = "last_name", nullable = false)
     private String lastName;
-    @Column(name ="email", nullable = false)
+
+    @Column(name ="email", nullable = false, unique = true)
     private String email;
     @Column(name ="password", nullable = false)
     private String password;
@@ -42,14 +45,9 @@ public class MyUser {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "birthdate", nullable = false)
+    private LocalDate birthdate; // Użycie LocalDate zamiast Date
 
-
-    @Column(name = "age", nullable = false)
-    private int age;
-
-    @Column(name="gender", nullable = false, length = 1)
-    @Pattern(regexp = "M|F", message = "Gender must be 'M' or 'F'")
-    private String gender;
     @Column(name = "verified_status", columnDefinition = "BIT")
     private Boolean verified;
 

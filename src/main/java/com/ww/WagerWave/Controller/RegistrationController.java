@@ -14,6 +14,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -55,6 +58,11 @@ public class RegistrationController {
                            BindingResult result,
                            Model model) {
 
+        // Sprawdzenie, czy e-mail już istnieje
+        if (userServices.emailExists(user.getEmail())) {
+            result.rejectValue("email", null, "E-mail jest już zajęty!");
+        }
+
         if (result.hasErrors()) {
             return "registration";
         }
@@ -67,6 +75,28 @@ public class RegistrationController {
         repo.save(user);
         return "redirect:/login";
     }
+
+    //TRZEBA DODAC OBLSUGE TYCH BŁĘDOW W HTML, ABY WYSWIETLAL SIE KOMMUNIKAT O BŁEDYM HASLE
+    //EMAIL CZY DANYCH PODCZAS REJESTRACJI
+
+    @PostMapping("/login")
+    public String login(@RequestParam String email, @RequestParam String password, Model model) {
+        Optional<MyUser> userOptional = userServices.findByEmail(email);
+
+        if (userOptional.isPresent()) {
+            MyUser user = userOptional.get();
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                // Użytkownik jest zalogowany, przekieruj na stronę główną
+                return "redirect:/Main"; // lub inna strona główna
+            } else {
+                model.addAttribute("error", "Invalid password");
+            }
+        } else {
+            model.addAttribute("error", "User not found");
+        }
+        return "/Registration"; // Zwróć do widoku logowania w przypadku błędu
+    }
+
 }
 
 

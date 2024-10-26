@@ -16,8 +16,7 @@
             <h1>Sign up</h1>
             <input type="text" th:name="firstName" placeholder="Name" required>
             <input type="text" th:name="lastName" placeholder="Surname" required>
-            <input type="number" th:name="age" placeholder="Age" required>
-            <input type="text" th:name="gender" placeholder="Gender (M/F)" required>
+            <input type="date" th:name="birthdate" placeholder="Birthdate" required>
             <input type="email" th:name="email" placeholder="Email" required>
             <input type="password" th:name="password" placeholder="Password" required>
             <button type="submit">Sign Up</button>
@@ -30,6 +29,7 @@
             <input type="email" th:name="username" placeholder="Email" required>
             <input type="password" th:name="password" placeholder="Password" required>
             <a href="#" th:href="@{/forgot-password}">Forget Your Password?</a>
+
             <button type="submit">Log In</button>
         </form>
     </div>

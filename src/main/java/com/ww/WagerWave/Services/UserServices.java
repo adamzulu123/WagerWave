@@ -51,4 +51,13 @@ public class UserServices implements UserDetailsService {
             throw new UsernameNotFoundException(email);
         }
     }
+
+    public boolean emailExists(String email) {
+        Optional<MyUser> user = userRepository.findByEmail(email);
+        return user.isPresent();
+    }
+
+    public Optional<MyUser> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }
