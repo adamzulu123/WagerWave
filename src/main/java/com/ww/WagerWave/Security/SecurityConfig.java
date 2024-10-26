@@ -11,6 +11,8 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 /*
 @Configuration - oznacza, że tak klasa to źrodlo definicji beanów oraz oznacza ze za pomoca
@@ -35,10 +37,14 @@ public class SecurityConfig {
     public AuthenticationProvider getAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userServices);
+        provider.setPasswordEncoder(getPasswordEncoder());
         return provider;
     }
 
-    //dodac PasswordEncoder aby działalo logowanie
+    @Bean
+    public PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 
     @Bean
@@ -65,7 +71,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/registration") //własna strona do logowania
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/Main.html", true) //po zalogowaniu, przekierowania na główna strone
+                        .defaultSuccessUrl("/Main", true) //po zalogowaniu, przekierowania na główna strone
                         .failureUrl("/registration.html?error=true") //w przypadku bledu ponowani strona registration
                 )
                 .logout(config -> config

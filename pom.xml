@@ -30,7 +30,7 @@
 		<java.version>21</java.version>
 		<flyway.url>jdbc:mysql://mysql-1c515400-wagerwave-db.j.aivencloud.com:27139/WagerWave_db</flyway.url>
 		<flyway.user>WWdeveloper</flyway.user>
-
+		<!--w przypadku wykonywanie operacji: mvn flyway:repair  - tutaj potrzebne jest hasło do bazy-->
 	</properties>
 
 

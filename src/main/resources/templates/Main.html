@@ -1,10 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Betting App - Home</title>
 </head>
 <body>
-    <H1>Hej</H1>
+<header>
+    <h1>Welcome to Betting App</h1>
+</header>
+
+<nav>
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/registration}">Register</a>
+</nav>
+
+<div class="content">
+    <h2>Upcoming Sports Events</h2>
+    <div th:if="${events != null}">
+        <ul>
+            <li th:each="event : ${events}">
+                <span th:text="${event.name}">Event Name</span> -
+                <span th:text="${event.date}">Event Date</span>
+            </li>
+        </ul>
+    </div>
+    <div th:if="${events == null}">
+        <p>No upcoming events at the moment. Please check back later!</p>
+    </div>
+</div>
 </body>
 </html>
