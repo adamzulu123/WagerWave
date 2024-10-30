@@ -4,6 +4,7 @@ package com.ww.WagerWave.Controller;
 import com.ww.WagerWave.Model.MyUser;
 import com.ww.WagerWave.Repository.UserRepository;
 import com.ww.WagerWave.Services.UserServices;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.View;
 
+import java.security.Provider;
 import java.util.Optional;
 
 @Controller
@@ -32,6 +35,8 @@ public class RegistrationController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private View error;
 
 
     //@GetMapping("/registration")
@@ -41,6 +46,7 @@ public class RegistrationController {
 
     @GetMapping("/registration")
     public String showRegistrationForm(Model model){
+
         // tworzymy obiekt MyUser oraz dodajemy go do modelu, aby można było skorzystac z jego danych w widoku
         MyUser user = new MyUser();
         model.addAttribute("user", user);
@@ -58,11 +64,6 @@ public class RegistrationController {
                            BindingResult result,
                            Model model) {
 
-        // Sprawdzenie, czy e-mail już istnieje
-        if (userServices.emailExists(user.getEmail())) {
-            result.rejectValue("email", null, "E-mail jest już zajęty!");
-        }
-
         if (result.hasErrors()) {
             return "registration";
         }
@@ -79,9 +80,15 @@ public class RegistrationController {
     //TRZEBA DODAC OBLSUGE TYCH BŁĘDOW W HTML, ABY WYSWIETLAL SIE KOMMUNIKAT O BŁEDYM HASLE
     //EMAIL CZY DANYCH PODCZAS REJESTRACJI
 
+
+    //to jednak nie jest potrzebne ale narazie zostawie - Spring security automatycznie/sam
+    //zarządzi całym procesem juz samo to loginProcessingUrl("/login") - wystarczy
+
+    /*
     @PostMapping("/login")
     public String login(@RequestParam String email, @RequestParam String password, Model model) {
         Optional<MyUser> userOptional = userServices.findByEmail(email);
+        System.out.println(userOptional);
 
         if (userOptional.isPresent()) {
             MyUser user = userOptional.get();
@@ -90,12 +97,15 @@ public class RegistrationController {
                 return "redirect:/Main"; // lub inna strona główna
             } else {
                 model.addAttribute("error", "Invalid password");
+                System.out.println(model.getAttribute("error"));
             }
         } else {
             model.addAttribute("error", "User not found");
         }
         return "/Registration"; // Zwróć do widoku logowania w przypadku błędu
     }
+     */
+
 
 }
 

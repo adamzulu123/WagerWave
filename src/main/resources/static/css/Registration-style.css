@@ -165,4 +165,8 @@ button:active{
     transform: translateX(20%);
 }
 
+.error-message{
+    color: red;
+    font-size: medium;
+}
 

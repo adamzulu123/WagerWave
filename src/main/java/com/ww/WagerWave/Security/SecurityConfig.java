@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -48,7 +49,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
             /*
             metoda authorizeHttpRequests - pozwala na konfigurowanie żądań na poziomie żądań HTTP
@@ -72,9 +73,10 @@ public class SecurityConfig {
                         .loginPage("/registration") //własna strona do logowania
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/Main", true) //po zalogowaniu, przekierowania na główna strone
-                        .failureUrl("/registration?error=true") //w przypadku bledu ponowani strona registration
+                        .failureHandler(new CustomAuthenticationFailureHandler()) //dodanie handlera do obłsugi błedów logowania
                 )
                 .logout(config -> config
+                        .logoutUrl("/logout")
                         .logoutSuccessUrl("/registration")) //po wylogownaniu powrót na strone do rejestracji
 
                 .build(); //utworzenie i zwrocenie obiektu
@@ -83,6 +85,9 @@ public class SecurityConfig {
 /*
 .loginProcessingUrl("/login") - dzięki temu SpringSecurity wie na jaki adres URL powinien zostać przesłany
 formularz logowania, w celu przetworzenia uwierzytelniania. Spring Sec przchwytuje to żadanie i przetwarza.
-
-
  */
+
+
+
+
+
