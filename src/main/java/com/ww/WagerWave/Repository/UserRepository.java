@@ -23,5 +23,6 @@ Optional<MyUser> - ozn, że może zawierac obiekt użytkownka lub byc pusty (jak
 @Repository
 public interface UserRepository extends JpaRepository<MyUser, Integer> {
     Optional<MyUser> findByEmail(String username);
+    boolean existsByEmail(String email); //metoda do sprawdzania unikalności maila przy rejestracji
 
 }

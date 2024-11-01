@@ -2,6 +2,7 @@ package com.ww.WagerWave.Model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.Period;
 
 /*
 @Entity wskazuje, że ta klasa jest encja (reprezentacja tabeli w bazie danych), dzięki temu hibernate wie,
@@ -34,11 +35,13 @@ public class MyUser {
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
+
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
     @Column(name ="email", nullable = false, unique = true)
     private String email;
+
     @Column(name ="password", nullable = false)
     private String password;
 
@@ -46,7 +49,7 @@ public class MyUser {
     private LocalDateTime createdAt;
 
     @Column(name = "birthdate", nullable = false)
-    private LocalDate birthdate; // Użycie LocalDate zamiast Date
+    private LocalDate birthdate;
 
     @Column(name = "verified_status", columnDefinition = "BIT")
     private Boolean verified;
@@ -54,6 +57,11 @@ public class MyUser {
     //wymagany przez jpa i hibernate
     public MyUser() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    //metoda do sprawdzania czy użytkownik, który próbuje sie zarejestrować ma ponad 18 lat.
+    public boolean isAdult(){
+        return Period.between(birthdate, LocalDate.now()).getYears() >= 18;
     }
 
 }

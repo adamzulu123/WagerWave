@@ -1,10 +1,8 @@
 package com.ww.WagerWave.Controller;
 
-
 import com.ww.WagerWave.Model.MyUser;
 import com.ww.WagerWave.Repository.UserRepository;
 import com.ww.WagerWave.Services.UserServices;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +10,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.View;
 
-import java.security.Provider;
-import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
@@ -38,11 +34,6 @@ public class RegistrationController {
     @Autowired
     private View error;
 
-
-    //@GetMapping("/registration")
-    //public String registration(){
-    //    return "registration";
-    //}
 
     @GetMapping("/registration")
     public String showRegistrationForm(Model model){
@@ -63,6 +54,17 @@ public class RegistrationController {
     public String register(@Valid @ModelAttribute("user") MyUser user,
                            BindingResult result,
                            Model model) {
+        //model.addAttribute("user", user);
+
+        if (!user.isAdult()){
+           result.addError(new FieldError("user", "birthdate",
+                   "You must be 18 to register"));
+
+        }
+         if(repo.existsByEmail(user.getEmail())){
+            result.addError(new FieldError("user", "email",
+                    "This email is already in use!"));
+        }
 
         if (result.hasErrors()) {
             return "registration";
@@ -76,9 +78,6 @@ public class RegistrationController {
         repo.save(user);
         return "redirect:/login";
     }
-
-    //TRZEBA DODAC OBLSUGE TYCH BŁĘDOW W HTML, ABY WYSWIETLAL SIE KOMMUNIKAT O BŁEDYM HASLE
-    //EMAIL CZY DANYCH PODCZAS REJESTRACJI
 
 
     //to jednak nie jest potrzebne ale narazie zostawie - Spring security automatycznie/sam

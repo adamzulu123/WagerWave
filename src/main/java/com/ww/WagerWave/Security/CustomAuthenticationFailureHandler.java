@@ -24,9 +24,16 @@ public class CustomAuthenticationFailureHandler  implements AuthenticationFailur
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
 
-        //todo
-        //request.getSession().setAttribute("error", "Invalid username or password");
 
-        //response.sendRedirect(request.getContextPath());
+        /*
+        w przypadki wpisania błędnego hasła albo username spring security automatycznie
+        zwraca błąd, jednak tutaj ta metoda pozwala na ustawienie customowego.
+        getSession() - zwraca obiekt HttpSession - aktualna sesje użytkownika
+        a przypomocy .setAttribute() ustawiamy nasz bład w customowym miejscu w formie logownia,
+        w atrybucie error
+         */
+        request.getSession().setAttribute("error", "Invalid username or password");
+
+        response.sendRedirect(request.getContextPath());
     }
 }
