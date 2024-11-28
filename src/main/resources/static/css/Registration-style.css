@@ -7,9 +7,15 @@
 }
 
 body{
+    background-image: url('../images/Background.jpg');  /* Ustawienie obrazu jako tło */
     background-size: cover;      /* Wypełnia tło, zachowując proporcje */
     background-position: center;  /* Wyśrodkowuje obraz */
+    background-repeat: no-repeat; /* Zapobiega powtarzaniu obrazu */
+    /*
+    background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
+    */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -29,7 +35,7 @@ body h1{
     padding: 30px;
     min-height: 480px;
     max-width: 80%;
-    background-color: whitesmoke;
+    background-color: mintcream;
     box-shadow: 5px 10px 15px rgba(0, 0, 0, 0.7);
 }
 
@@ -53,7 +59,7 @@ body h1{
 }
 
 form{
-    background-color: whitesmoke;
+    background-color: mintcream;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -121,7 +127,7 @@ button:active{
 .switch{
     position: relative;
     color: whitesmoke;
-    background-color: #548a34;
+    background-color: seagreen;
     left: -100%;
     height: 100%;
     width: 200%;

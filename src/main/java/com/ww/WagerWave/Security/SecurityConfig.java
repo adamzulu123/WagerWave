@@ -64,7 +64,7 @@ public class SecurityConfig {
              */
         return http
                 .authorizeHttpRequests(authorizeRequests ->{
-                    authorizeRequests.requestMatchers("/registration", "/register", "/css/**","/js/**" ).permitAll();
+                    authorizeRequests.requestMatchers("/registration", "/register","/images/**", "/css/**","/js/**" ).permitAll();
                     authorizeRequests.anyRequest().authenticated(); //każda inna musi być uwierzytelniony użytkownik
                 })
                 //konfiguracja ustawien logowania
