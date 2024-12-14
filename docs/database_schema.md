@@ -11,6 +11,7 @@
 | `last_name`        | VARCHAR(100)   | NOT NULL                                | Nazwisko użytkownika.                 |
 | `birth_date`       | DATE           | NOT NULL                                | Data urodzenia użytkownika.           |
 | `account_creation` | TIMESTAMP      | DEFAULT CURRENT_TIMESTAMP, NOT NULL     | Data utworzenia konta.                |
+| `verified`         | BIT            | DEFAULT 0, NOT NULL                     | Status weryfikacji.                   |
 
 ---
 
@@ -33,7 +34,7 @@
 |--------------------|----------------|-----------------------------------------|----------------------------------------|
 | `transaction_id`   | INT            | AUTO_INCREMENT, PRIMARY KEY             | Unikalny identyfikator transakcji.    |
 | `wallet_id`        | INT            | NOT NULL                                | Identyfikator portfela.               |
-| `transaction_type` | ENUM           | ('deposit', 'withdrawal', 'bet_spent', 'bet_won'), NOT NULL | Typ transakcji.                       |
+| `transaction_type` | ENUM           | ('DEPOSIT', 'WITHDRAWAL', 'BET_SPENT', 'BET_WON'), NOT NULL | Typ transakcji.                       |
 | `amount`           | DECIMAL(12, 2) | NOT NULL                                | Kwota transakcji.                     |
 | `transaction_time` | TIMESTAMP      | DEFAULT CURRENT_TIMESTAMP, NOT NULL     | Czas transakcji.                      |
 
@@ -53,7 +54,7 @@
 | `odds_draw`        | DECIMAL(8, 2)  | DEFAULT NULL                            | Kurs na remis.                        |
 | `event_start_time` | TIMESTAMP      | DEFAULT CURRENT_TIMESTAMP, NOT NULL     | Czas rozpoczęcia wydarzenia.          |
 | `event_end_time`   | TIMESTAMP      | DEFAULT CURRENT_TIMESTAMP, NOT NULL     | Czas zakończenia wydarzenia.          |
-| `event_result`     | ENUM           | ('pending', 'team_1', 'team_2', 'draw'), DEFAULT 'pending', NOT NULL | Wynik wydarzenia.                     |
+| `event_result`     | ENUM           | ('PENDING', 'TEAM_1', 'TEAM_2', 'DRAW'), DEFAULT 'PENDING', NOT NULL | Wynik wydarzenia.                     |
 
 ---
 
@@ -68,7 +69,7 @@
 | `coupon_potential_win`    | DECIMAL(12, 2) | NOT NULL                                | Potencjalna wygrana.                  |
 | `coupon_creation`  | TIMESTAMP      | DEFAULT CURRENT_TIMESTAMP, NOT NULL     | Czas utworzenia kuponu.               |
 | `coupon_end_time`  | TIMESTAMP      | DEFAULT CURRENT_TIMESTAMP, NOT NULL     | Czas zakończenia kuponu.              |
-| `coupon_result`     | ENUM           | ('pending', 'won', 'lost'), DEFAULT 'pending', NOT NULL | Wynik kuponu.                         |
+| `coupon_result`     | ENUM           | ('PENDING', 'WON', 'LOST'), DEFAULT 'PENDING', NOT NULL | Wynik kuponu.                         |
 
 ---
 
@@ -80,13 +81,13 @@
 | `user_id`          | INT            | NOT NULL                                | Identyfikator użytkownika.             |
 | `coupon_id`        | INT            | DEFAULT NULL                            | Identyfikator kuponu (jeśli dotyczy). |
 | `event_id`         | INT            | NOT NULL                                | Identyfikator wydarzenia.              |
-| `bet_type`         | ENUM           | ('team_1', 'team_2', 'draw'), NOT NULL | Typ zakładu.                          |
+| `bet_type`         | ENUM           | ('TEAM_1', 'TEAM_2', 'DRAW'), NOT NULL | Typ zakładu.                          |
 | `bet_odds`         | DECIMAL(8, 2)  | NOT NULL                                | Kurs zakładu.                         |
 | `bet_stake`        | DECIMAL(12, 2) | DEFAULT NULL                         | Wysokość zakładu (jeśli dotyczy).                   |
 | `bet_potential_win`    | DECIMAL(12, 2) | DEFAULT NULL                            | Potencjalna wygrana (jeśli dotyczy).                  |
 | `bet_creation`     | TIMESTAMP      | DEFAULT CURRENT_TIMESTAMP, NOT NULL     | Czas postawienia zakładu.             |
 | `bet_end_time`     | TIMESTAMP      | DEFAULT CURRENT_TIMESTAMP, NOT NULL     | Czas zakończenia zakładu.             |
-| `bet_result`       | ENUM           | ('pending', 'won', 'lost'), DEFAULT 'pending', NOT NULL | Wynik zakładu.                       |
+| `bet_result`       | ENUM           | ('PENDING', 'WON', 'LOST'), DEFAULT 'PENDING', NOT NULL | Wynik zakładu.                       |
 
 ---
 
