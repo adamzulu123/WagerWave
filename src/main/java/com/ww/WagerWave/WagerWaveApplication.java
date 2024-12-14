@@ -9,5 +9,4 @@ public class WagerWaveApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(WagerWaveApplication.class, args);
 	}
-	//d
 }

@@ -18,7 +18,15 @@
 		<license/>
 	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+			<name>Emilian Madetko</name>
+		</developer>
+		<developer>
+			<name>Kamil Nawrocki</name>
+		</developer>
+		<developer>
+			<name>Adam Nowak</name>
+		</developer>
 	</developers>
 	<scm>
 		<connection/>

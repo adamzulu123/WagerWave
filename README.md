@@ -1,5 +1,3 @@
 # WagerWave
 
-
-
-git checkout 'branch_name' 
+**Autorzy: E. Madetko, K. Nawrocki, A. Nowak**
