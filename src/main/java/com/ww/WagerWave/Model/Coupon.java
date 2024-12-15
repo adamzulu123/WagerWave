@@ -25,7 +25,7 @@ public class Coupon {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private MyUser user;
 
     @Column(name = "coupon_odds", nullable = false)
     private BigDecimal odds;

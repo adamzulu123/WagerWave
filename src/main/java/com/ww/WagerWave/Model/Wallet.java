@@ -26,7 +26,7 @@ public class Wallet {
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)
-    private User user;
+    private MyUser user;
 
     @Column(name = "balance", nullable = false)
     private BigDecimal balance;

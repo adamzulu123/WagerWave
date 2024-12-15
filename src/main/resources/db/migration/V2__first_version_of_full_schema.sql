@@ -1,14 +1,3 @@
-CREATE TABLE users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    hashed_password VARCHAR(255) NOT NULL,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
-    birth_date DATE NOT NULL,
-    account_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    verified BIT DEFAULT 0 NOT NULL
-) ;
-
 CREATE TABLE wallets (
     wallet_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNIQUE NOT NULL,
@@ -16,7 +5,7 @@ CREATE TABLE wallets (
     daily_limit DECIMAL(12, 2) DEFAULT NULL,
     remaining_limit DECIMAL(12, 2) DEFAULT NULL,
     last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    FOREIGN KEY (user_id) REFERENCES Users(id)
 ) ;
 
 CREATE TABLE transactions (
@@ -53,7 +42,7 @@ CREATE TABLE coupons (
     coupon_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     coupon_end_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     coupon_result ENUM('PENDING', 'WON', 'LOST') DEFAULT 'PENDING' NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id),
     INDEX idx_user_id (user_id)
 ) ;
 
@@ -69,7 +58,7 @@ CREATE TABLE bets (
     bet_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     bet_end_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     bet_result ENUM('PENDING', 'WON', 'LOST') DEFAULT 'PENDING' NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id),
     FOREIGN KEY (coupon_id) REFERENCES coupons(coupon_id),
     FOREIGN KEY (event_id) REFERENCES events(event_id),
     INDEX idx_user_id (user_id),

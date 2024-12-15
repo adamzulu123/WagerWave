@@ -25,7 +25,7 @@ public class Bet {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private MyUser user;
 
     @ManyToOne
     @JoinColumn(name = "coupon_id")
