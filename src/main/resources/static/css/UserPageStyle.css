@@ -1,0 +1,184 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+body {
+    background: #033d54;
+    background: linear-gradient(130deg, rgba(2,61,84,1) 0%, rgba(46,139,87,1) 35%, rgba(255,255,102,1) 100%);
+    min-height: 100vh;
+}
+
+
+.navbar{
+    background-color: rgb(27, 120, 67);
+    padding: 25px;
+    display: flex;
+    box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.7);
+
+}
+.title{
+    font-size: xx-large;
+    color: whitesmoke;
+}
+.home-btn {
+    color: whitesmoke;
+    font-size: xx-large;
+}
+
+/*Account-data */
+.profile-title{
+    font-size: x-large;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.container-fluid{
+    font-size: small;
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 25px;
+    background-color: white;
+    border-radius: 20px;
+    border: none;
+    min-height: fit-content;
+    box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.7);
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.mb-3{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+
+
+/* Styl dla etykiety */
+.form-label {
+    flex: 1;
+    text-align: left;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Styl dla pola input */
+.form-input {
+    flex: 2;
+    padding: 8px;
+    text-align: right; /* Wyrównanie tekstu do prawej */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.btn-primary{
+    flex: 2;
+    background-color: #023D54;
+    border-color:  #023D54;
+}
+.btn-primary:hover{
+    background-color: #064d6c;
+
+}
+
+
+/*Account management*/
+.action {
+    display: flex;
+    justify-content: space-between;
+}
+
+.action form {
+    flex: 1;  /*tyle samo przestrzeni oba*/
+}
+
+.btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.action .btn-secondary {
+    background-color: rgb(45, 88, 88);  
+}
+
+.action .btn-secondary:hover{
+    background-color: rgb(55, 106, 106);
+}
+
+
+/*same button for wallet*/
+.btn-danger {
+    background-color: darkred;
+}
+.btn-danger:hover{
+    background-color: rgb(159, 7, 7);
+}
+
+
+
+
+/*Wallet*/
+.wallet{
+    background-color: seagreen;
+}
+.wallet-title{
+    font-weight: bold;
+    font-size: x-large;
+
+}
+
+.wallet-section{
+    text-align: center;
+    color: beige;
+}
+.wallet-icon {
+    font-size: 3em; /* Możesz dostosować rozmiar ikony */
+}
+.balance{
+    font-size: medium;
+}
+
+.wallet-actions {
+    display: flex; /* Umożliwia umieszczenie przycisków obok siebie */
+    justify-content: space-between; /* Rozkłada przyciski na całą szerokość kontenera */
+}
+
+.wallet-actions button {
+    width: 100%;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/*deposit button*/
+.wallet-actions .btn-secondary{
+    background-color: rgb(4, 85, 4);
+}
+
+.wallet-actions .btn-secondary:hover{
+    background-color: rgb(8, 109, 8);
+}
+
+
+.btn:hover{
+    transform: scale(1.02);
+}
+
+
+
+

@@ -7,10 +7,8 @@
 }
 
 body{
-    background-image: url('../images/Background.jpg');  /* Ustawienie obrazu jako tło */
-    background-size: cover;      /* Wypełnia tło, zachowując proporcje */
-    background-position: center;  /* Wyśrodkowuje obraz */
-    background-repeat: no-repeat; /* Zapobiega powtarzaniu obrazu */
+    background: #033d54;
+    background: linear-gradient(130deg, rgba(2,61,84,1) 0%, rgba(46,139,87,1) 35%, rgba(255,255,102,1) 100%);
     /*
     background-size: cover;
     background-position: center;
@@ -127,7 +125,7 @@ button:active{
 .switch{
     position: relative;
     color: whitesmoke;
-    background-color: seagreen;
+    background-color: rgba(46,139,87,1);
     left: -100%;
     height: 100%;
     width: 200%;

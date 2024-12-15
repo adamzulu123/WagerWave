@@ -1,0 +1,97 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #033d54;
+    background: linear-gradient(130deg, rgba(2,61,84,1) 0%, rgba(46,139,87,1) 35%, rgba(255,255,102,1) 100%);
+    min-height: 100vh;
+}
+
+.deposit-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+.deposit-container h2 {
+    color: #033d54;
+}
+
+.bi-piggy-bank{
+    font-size: 3rem;
+    color: #033d54;
+}
+
+
+.mb-3{
+    font-size: medium;
+}
+.form-control{
+    font-size: small;
+}
+
+.blik-icon{
+    width: 80px;
+    height: auto;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+.blik-icon:hover{
+    transform: scale(1.05);
+}
+
+.blik-code {
+    display: none;
+    margin-top: 15px;
+}
+
+
+.confirm-button{
+    background-color: #033d54;
+    border-color: #033d54;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.confirm-button:hover{
+    transform: scale(1.02);
+    background-color: #064d6c;
+}
+
+.cancel-button{
+    background-color: darkred;
+    border-color: darkred;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.cancel-button:hover{
+    background-color: rgb(159, 7, 7);
+    transform: scale(1.02);
+}
+
+.confirmation-message {
+    display: none;
+    font-weight: bold;
+    color: green;
+    margin-top: 15px;
+}
+
+
+
+
+
+
+
+
+
+
+

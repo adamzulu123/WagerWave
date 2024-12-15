@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,6 +25,7 @@ implements UserDetailsService - interfejs SpringSecurity pozwalajacy ładować u
 (do opisanai jak zadziała )
 
  */
+
 
 @Service
 @AllArgsConstructor
@@ -61,7 +63,13 @@ public class UserServices implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
-
-
-
+    //usuwanie konta
+    public void deleteUser(String email) {
+        Optional<MyUser> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            userRepository.delete(user.get());
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
 }

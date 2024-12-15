@@ -2,9 +2,11 @@ package com.ww.WagerWave.Security;
 
 import com.ww.WagerWave.Services.UserServices;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +17,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 /*
 @Configuration - oznacza, że tak klasa to źrodlo definicji beanów oraz oznacza ze za pomoca
 tej klasy będa odbywała configuracja springsecurity.
@@ -23,11 +28,10 @@ tej klasy będa odbywała configuracja springsecurity.
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor //automatyczne generowanie kontruktora ktory zawiera wsztkie elementy klasy
 public class SecurityConfig {
 
     @Autowired
-    private final UserServices userServices;
+    private UserServices userServices;
 
     @Bean
     public UserDetailsService getUserDetailsService() {
@@ -47,6 +51,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
@@ -62,6 +67,20 @@ public class SecurityConfig {
             .anyRequest().authenticated() - to powoduje, że każdy inny zasbów/url/strona, która nie znajduję
             się wyżej w wyjątkach, wymaga aby użytkownik byl uwierzytelniony inaczej nie ma do niej dostępu.
              */
+
+        // Tworzymy handler do usuwania plików cookie przy wylogowywaniu
+        HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(
+                new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.COOKIES)
+        );
+
+        // Tworzymy domyślnego SecurityContextLogoutHandler
+        //SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
+        //tego jednak nie trzeba dodawać bo on jest domyślnie używany jako jeden handlerow, jesli korzystamy z domyślnego
+        //systemy wylogowywania od spring security - dlatego przy usunieciu konta z niego korzystam !!!
+        //on domyślnie usuwa sesje uzytkownika - czysci dane sesji i kontekst bezpieczeństwa
+
+
+
         return http
                 .authorizeHttpRequests(authorizeRequests ->{
                     authorizeRequests.requestMatchers("/registration", "/register","/images/**", "/css/**","/js/**" ).permitAll();
@@ -74,9 +93,11 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/Main", true) //po zalogowaniu, przekierowania na główna strone
                         .failureHandler(new CustomAuthenticationFailureHandler()) //dodanie handlera do obłsugi błedów logowania
                 )
+                //domyślne wylogowywanie
                 .logout(config -> config
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/registration")) //po wylogownaniu powrót na strone do rejestracji
+                        .logoutSuccessUrl("/registration") //po wylogownaniu powrót na strone do rejestracji
+                        .addLogoutHandler(clearSiteData))
 
                 .build(); //utworzenie i zwrocenie obiektu
     }
