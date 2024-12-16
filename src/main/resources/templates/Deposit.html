@@ -17,31 +17,41 @@
   </div>
   <h2>Deposit Funds</h2>
 
-  <!-- Amount Input -->
-  <div class="mb-3">
-    <label for="amount" class="form-label">Enter Amount</label>
-    <input type="number" class="form-control" id="amount" placeholder="Amount in PLN">
-  </div>
+  <form th:action="@{/depositFunds}" method="POST">
+    <!-- Amount Input -->
+    <div class="mb-3">
+      <label for="amount" class="form-label">Enter Amount</label>
+      <input type="number" class="form-control" id="amount" name="amount" placeholder="Amount in PLN" min="5" required>
+    </div>
 
-  <!-- Payment Method Selection -->
-  <h5>Select Payment Method</h5>
-  <div class="payment-methods">
-    <!-- BLIK Payment Option -->
-    <img src="/jpg/Blik_logo.jpg" alt="BLIK" class="blik-icon" id="blikIcon">
-  </div>
+    <!-- Payment Method Selection -->
+    <h5>Select Payment Method</h5>
+    <div class="payment-methods">
+      <!-- BLIK Payment Option -->
+      <img src="../images/Blik_logo.jpg" alt="BLIK" class="blik-icon" id="blikIcon">
+    </div>
 
-  <!-- BLIK Code Input -->
-  <div class="blik-code" id="blikCodeContainer">
-    <label for="blikCode" class="form-label">Enter BLIK Code</label>
-    <input type="text" id="blikCode" class="form-control" placeholder="6-digit code" maxlength="6">
-    <button class="btn btn-primary mt-3 confirm-button" id="confirmPayment">Confirm Payment</button>
-    <button class="btn btn-danger mt-3 cancel-button" id="cancelPayment">Cancel Payment</button>
-  </div>
+    <!-- BLIK Code Input -->
+    <div class="blik-code" id="blikCodeContainer">
+      <label for="blikCode" class="form-label">Enter BLIK Code</label>
+      <input type="text" id="blikCode" name="blikCode" class="form-control" placeholder="6-digit code"
+             maxlength="6" required pattern="^\d{6}$" title="Enter exactly 6 digits">
+      <button type="submit" class="btn btn-primary mt-3 confirm-button" id="confirmPayment">Confirm Payment</button>
 
-  <!-- Confirmation Message -->
-  <div class="confirmation-message" id="confirmationMessage">
-    Account Successfully Funded!
-  </div>
+      <!-- dzieki typowi submit tylko ten przycisk wysyła formularz z ten button gdy go nacisniemy przekirowuje do Account -->
+      <button type="button" class="btn btn-danger mt-3 cancel-button" id="cancelPayment"
+              onclick="window.location.href='/Account'">Cancel Payment</button>
+    </div>
+  </form>
+
+    <!-- Confirmation Message -->
+    <div class="confirmation-message" th:if="${successMessage}">
+      <span th:text="${successMessage}"></span>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger mt-3" role="alert">
+      <span th:text="${errorMessage}"></span>
+    </div>
+
 </div>
 
 <script src="../js/DepositJS.js"></script>

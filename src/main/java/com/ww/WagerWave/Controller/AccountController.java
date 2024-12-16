@@ -1,13 +1,14 @@
 package com.ww.WagerWave.Controller;
 
 import com.ww.WagerWave.Model.MyUser;
+import com.ww.WagerWave.Model.Wallet;
 import com.ww.WagerWave.Services.PasswordServices;
 import com.ww.WagerWave.Services.UserServices;
+import com.ww.WagerWave.Services.WalletService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,8 @@ public class AccountController {
     @Autowired
     private final PasswordServices passwordServices;
 
+    private final WalletService walletService;
+
 
     @GetMapping("Account")
     public String showAccount(Principal principal, Model model) {
@@ -41,10 +44,19 @@ public class AccountController {
         do dalszej czesci kodu. dodajemy user do modelu z klucznem "user" dzieki czemu teraz
         Thymeleaf widzi nasz obiekt user, co pozwala wypisac dane użytkownik a
          */
-        userOptional.ifPresent(user -> model.addAttribute("user", user));
+        userOptional.ifPresent(user -> {
+            model.addAttribute("user", user);
+
+            Wallet wallet = walletService.getWalletForUser(user); //pobieramy wallet sprawdzony przez timer!
+
+            model.addAttribute("wallet", wallet);
+        });
 
         return "Account"; // Upewnij się, że ten widok istnieje
     }
+
+
+
 
     //Spring Security przechowuje szczegóły zalogowanego użytkownika w kontekście bezpieczeństwa (tzw. SecurityContext)
     //i te szczgóły (dane) są potem dostępne dzięki obiektowi principal
@@ -58,6 +70,11 @@ public class AccountController {
         if (userOptional.isPresent()) {
             MyUser user = userOptional.get();
             model.addAttribute("user", user);
+
+            //teraz do szablonu musimy tez wallet dodawac
+            Wallet wallet = walletService.getWalletForUser(user);
+            model.addAttribute("wallet", wallet);
+
 
             if (!passwordServices.verifyPassword(user, currentPassword)) {
                 model.addAttribute("errorMessage", "Original password does not match");

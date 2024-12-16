@@ -1,7 +1,9 @@
 package com.ww.WagerWave.Controller;
 
 import com.ww.WagerWave.Model.MyUser;
+import com.ww.WagerWave.Model.Wallet;
 import com.ww.WagerWave.Repository.UserRepository;
+import com.ww.WagerWave.Repository.WalletRepository;
 import com.ww.WagerWave.Services.UserServices;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.View;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 
 @Controller
 @AllArgsConstructor
@@ -25,6 +30,8 @@ public class RegistrationController {
     //repo umozliwia komunikacje z baza przy pomocy operacju CRUD (Create, Read, Update, Delete)
     @Autowired
     private final UserServices userServices;
+
+    private final WalletRepository walletRepository;
 
     @Autowired
     private UserRepository repo;
@@ -74,8 +81,19 @@ public class RegistrationController {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
-        // Zapisz użytkownika w bazie danych
-        repo.save(user);
+        MyUser savedUser = repo.save(user);
+
+        //dodanie domyślnego portfela dla użytkownika
+        Wallet defaultWallet = Wallet.builder()
+                .user(savedUser)
+                .balance(BigDecimal.ZERO)
+                .dailyLimit(BigDecimal.valueOf(200))
+                .remainingLimit(BigDecimal.valueOf(200))
+                .lastUpdate(LocalDateTime.now())
+                .build();
+
+        walletRepository.save(defaultWallet);
+
         return "redirect:/login";
     }
 

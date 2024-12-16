@@ -174,11 +174,23 @@ body {
     background-color: rgb(8, 109, 8);
 }
 
-
 .btn:hover{
     transform: scale(1.02);
 }
 
+.limit{
+    background-color: mintcream;
+}
+.limit-title{
+    font-weight: bold;
+    font-size: x-large;
+}
+.confirm-limit-btn{
+    background-color: rgb(4, 85, 4);
+}
+.confirm-limit-btn:hover{
+    background-color: rgb(8, 109, 8);
+}
 
 
 

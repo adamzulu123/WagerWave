@@ -95,15 +95,51 @@
                 <i class="bi bi-cash-stack"></i>
             </div>
             <div class="balance">
-                <p><span id="balance">0.00</span></p>
+                <p><span id="balance" th:text="${wallet.balance}"></span></p>
             </div>
 
             <div class="wallet-actions d-flex justify-content-between flex-wrap">
-                <button type="submit" class="btn btn-secondary col-12 col-md-5 mb-2">Deposit</button>
-                <button type="submit" class="btn btn-danger col-12 col-md-5 mb-2">Withdraw</button>
+                <a th:href="@{/depositPage}" class="btn btn-secondary col-12 col-md-5 mb-2">Deposit</a>
+                <a th:href="@{/withdrawPage}" class="btn btn-danger col-12 col-md-5 mb-2">Withdraw</a>
             </div>
         </div>
     </div>
+
+    <!-- Daily limit management -->
+    <div class="container-fluid limit mt-4">
+        <div class="limit-section text-center">
+            <h4 class="limit-title">Set Daily Limit</h4>
+            <p>Current Limit<span id="dailyLimit" th:text="${wallet.dailyLimit}"></span></p>
+
+
+            <form th:action="@{/setDailyLimit}" method="POST">
+                <div class="mb-3">
+
+                    <label for="newLimit" class="form-label"></label>
+                    <input type="range" class="form-range" id="newLimit" name="newLimit" min="50" max="500" step="10"
+                           th:value="${wallet.dailyLimit}"> <!-- domyslnie ustawiamy aktualny linit  -->
+
+                    <p>New limit: <span id="limitValue"></span> PLN</p>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 mt-3 confirm-limit-btn">Confirm Limit Change</button>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        //obsługa suwaka
+        const slider = document.getElementById('newLimit');
+        const limitValue = document.getElementById('limitValue');
+
+        slider.oninput = function() {
+            limitValue.textContent = slider.value;
+        }
+
+        limitValue.textContent = slider.value;
+    </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
