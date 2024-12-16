@@ -110,12 +110,19 @@ public class AccountController {
         Optional<MyUser> userOptional = userServices.findByEmail(principal.getName());
         if (userOptional.isPresent()) {
             MyUser user = userOptional.get();
+            model.addAttribute("user", user);
+
+            //musimy wallet dodac
+            Wallet wallet = walletService.getWalletForUser(user);
+            model.addAttribute("wallet", wallet);
 
             if (!passwordServices.verifyPassword(user, password)) {
                 model.addAttribute("errorMessage", "Original password does not match");
                 return "Account";
             }
 
+            //najpierw jego portfel usuwamy
+            walletService.deleteWallet(user);
             // Usuwamy użytkownika z bazy danych
             userServices.deleteUser(user.getEmail());
 

@@ -115,4 +115,11 @@ public class WalletService {
         wallet.setDailyLimit(newDailyLimit);
         walletRepository.save(wallet);
     }
+
+    @Transactional
+    public void deleteWallet(MyUser user) {
+        Wallet wallet = getWalletForUser(user);
+        walletRepository.delete(wallet);
+    }
+
 }
