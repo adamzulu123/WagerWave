@@ -33,6 +33,8 @@ public class WalletService {
         System.out.println("Updated wallets at startup: " + outdatedWallets.size() + " wallets updated.");
     }
 
+
+    //ok
     public void resetRemainingLimit(Wallet wallet) {
         wallet.setRemainingLimit(wallet.getDailyLimit());
         wallet.setLastUpdate(LocalDateTime.now());
