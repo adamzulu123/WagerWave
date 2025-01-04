@@ -104,6 +104,7 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+		<!-- Na testa do sprawdzenia zarządzania wieloma sesjami -->
 
     </dependencies>
 

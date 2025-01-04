@@ -98,6 +98,9 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/registration") //po wylogownaniu powrót na strone do rejestracji
                         .addLogoutHandler(clearSiteData))
+                .sessionManagement(session -> session
+                        .maximumSessions(-1)  //-1 brak limitu ilości sesji
+                )
 
                 .build(); //utworzenie i zwrocenie obiektu
     }
