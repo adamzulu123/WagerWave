@@ -109,7 +109,7 @@
     <div class="container-fluid limit mt-4">
         <div class="limit-section text-center">
             <h4 class="limit-title">Set Daily Limit</h4>
-            <p>Current Limit<span id="dailyLimit" th:text="${wallet.dailyLimit}"></span></p>
+            <p>Current Limit: <span id="dailyLimit" th:text="${wallet.dailyLimit}"> PLN</span></p>
 
 
             <form th:action="@{/setDailyLimit}" method="POST">

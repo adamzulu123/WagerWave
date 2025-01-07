@@ -8,17 +8,25 @@ import com.ww.WagerWave.Model.Event;
 import com.ww.WagerWave.Model.EventResult;
 import com.ww.WagerWave.Model.EventStatus;
 import com.ww.WagerWave.Repository.EventRepository;
-import lombok.AllArgsConstructor;
+import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.ThreadLocalRandom;
 
+@Slf4j
 @Service
 public class BasketballApiServices {
 
@@ -37,6 +45,49 @@ public class BasketballApiServices {
                 .defaultHeader("x-rapidapi-host", apiHost)
                 .build();
     }
+
+    //@PostConstruct powoduje ze wywołujemy to przy inicjacji tego obiektu, czyli zawsze podczas startu aplikacji
+    //@Transactional zapewnia, że medoy będa działały w ramach jednej transakcji, jak cos pójdzie nie tak obie wycofane
+    //@Async - metoda jest asychroniczna czyli bedzie działać w tle w osobnym wątku i nie blokować aplikacji
+    @PostConstruct
+    @Transactional
+    @Async
+    public void initialEventsUpdate(){
+        String league = "12";
+        String season = "2024-2025";
+        LocalDate today = LocalDate.now();
+        LocalDate tomorow = today.plusDays(3);
+        //LocalDate twoDaysAfter = today.plusDays(4);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String todayDate = formatter.format(today);
+        String tomorowDate = formatter.format(tomorow);
+        //String twoDaysAfterDate = formatter.format(twoDaysAfter); //bez tego narazie bo baza nie wyrabia 2 dni w przód
+
+        //teraz poobieramy dane z tych dni
+        //.subscribe() w przeciwieństwie do block() nie blokuje głównego wątku, alee działa asynchronicznie.
+        //dzięki temu zapisywanie i pobieranie odpowiedzi z api odbywa sie w tle podczas inicjalizaji obiektów.
+        getAndSaveGames(league, season, todayDate).subscribe();
+        getAndSaveGames(league, season, tomorowDate).subscribe();
+    }
+
+    @Scheduled(initialDelay = 1800000, fixedRate = 3600000) // Po 30 minutach, a potem co godzinę
+    public void scheduledEventUpdate(){
+        String league = "12";
+        String season = "2024-2025";
+        LocalDate today = LocalDate.now();
+        LocalDate tomorow = today.plusDays(3);
+        //LocalDate twoDaysAfter = today.plusDays(4);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String todayDate = formatter.format(today);
+        String tomorowDate = formatter.format(tomorow);
+        //String twoDaysAfterDate = formatter.format(twoDaysAfter); //bez tego narazie bo baza nie wyrabia 2 dni w przód
+
+        getAndSaveGames(league, season, todayDate).subscribe();
+        getAndSaveGames(league, season, tomorowDate).subscribe();
+    }
+
 
     //jest to operacja asynchroniczna bo takie zapytanie moze zajac duzo czasu i zeby nie spowalniac działania aplikacji
     //metoda do pobierania gier i zapisywania ich do bazy
@@ -62,10 +113,22 @@ public class BasketballApiServices {
 
                             //sprawdzamy czy event istnieje w bazie i jesli nie to dodajemy
                             eventRepository.findByApiGameId(event.getApiGameId())
-                                    .ifPresentOrElse(existingEvent -> {},
+                                    .ifPresentOrElse(existingEvent -> {
+                                                EventResult newResult = determineEventResult(existingEvent,
+                                                        gameElement.getAsJsonObject().getAsJsonObject("scores"));
+
+                                                // Jeśli wynik się zmienił, aktualizujemy istniejący event
+                                                if (newResult != existingEvent.getEventResult()) {
+                                                    existingEvent.setEventResult(newResult);
+                                                    existingEvent.setLastUpdated(LocalDateTime.now());
+                                                    eventRepository.save(existingEvent);
+                                                    log.info("Updated event: {}", existingEvent.getApiGameId());
+                                                }
+                                            },
                                             () -> {
                                                 //zapisz event do bazy danych
                                                 eventRepository.save(event);
+                                                log.info("Saved new event: {}", event.getApiGameId());
                                             });
                         });
 
@@ -92,6 +155,11 @@ public class BasketballApiServices {
         LocalDateTime eventStartTime = offsetDateTime.toLocalDateTime();
         LocalDateTime eventEndTime = eventStartTime.plusHours(2);
 
+        //odds - losowe generownaie narazie -zeby api nie przeciążyc
+        BigDecimal oddsTeam1 = generateOdds();
+        BigDecimal oddsTeam2 = generateOdds();
+        BigDecimal oddsDraw = generateDrawOdds(oddsTeam1, oddsTeam2);
+
         //narazie domyslne wartosci, potem uzupełnie o dokładne
         return Event.builder()
                 .apiGameId(gameId)
@@ -100,9 +168,9 @@ public class BasketballApiServices {
                 .subcategory("NBA")
                 .team1(homeTeam.get("name").getAsString())
                 .team2(awayTeam.get("name").getAsString())
-                .oddsTeam1(new BigDecimal("1.5"))
-                .oddsTeam2(new BigDecimal("2.5"))
-                .oddsDraw(new BigDecimal("3.0"))
+                .oddsTeam1(oddsTeam1)
+                .oddsTeam2(oddsTeam2)
+                .oddsDraw(oddsDraw)
                 .eventStartTime(eventStartTime)
                 .eventEndTime(eventEndTime)
                 .eventResult(EventResult.PENDING)
@@ -110,6 +178,49 @@ public class BasketballApiServices {
                 .lastUpdated(LocalDateTime.now())
                 .build();
     }
+
+    //metoda do sprawdzania wyników, porównaia czy wynik meczu jest już znany w api i czy nie został juz zaktualizowany w bazie
+     private EventResult determineEventResult(Event existingEvent, JsonObject scores) {
+         //jeśli wynik juz został wczesniej pobrany wiec nie trzeba tego ponownie aktualizować bazy
+         //i zużywać jej ograniczone zasoby
+         if (existingEvent.getEventResult() != EventResult.PENDING) {
+             return existingEvent.getEventResult();
+         }
+
+         //pobierz wyniki
+         JsonElement homeScoreElement = scores.getAsJsonObject("home").get("total");
+         JsonElement awayScoreElement = scores.getAsJsonObject("away").get("total");
+
+         //sprawdzamy czy element json wgl istnieje oraz czy element nie jest null w strukturze odpowiedzi api
+         Integer homeScore = homeScoreElement != null && !homeScoreElement.isJsonNull()
+                 ? homeScoreElement.getAsInt() : null;
+
+         Integer awayScore = awayScoreElement != null && !awayScoreElement.isJsonNull()
+                 ? awayScoreElement.getAsInt() : null;
+
+         if (homeScore != null && awayScore != null) {
+             if (homeScore > awayScore) {
+                 return EventResult.TEAM_1;
+             } else if (awayScore > homeScore) {
+                 return EventResult.TEAM_2;
+             } else {
+                 return EventResult.DRAW;
+             }
+         }
+
+         //jeśli nadal nie ma wyników
+         return EventResult.PENDING;
+     }
+
+     //losowanie odds
+     private BigDecimal generateOdds(){
+        return BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(1.01, 5))
+                .setScale(2, RoundingMode.HALF_UP);
+     }
+     private BigDecimal generateDrawOdds(BigDecimal odds1, BigDecimal odds2){
+        return odds1.add(odds2).divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP);
+     }
+
 }
 
 

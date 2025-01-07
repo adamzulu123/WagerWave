@@ -108,6 +108,8 @@
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 
+
+
 		<!-- potrzebne na macu inaczej jakis dziwny błąd-->
 		<dependency>
 			<groupId>io.netty</groupId>
