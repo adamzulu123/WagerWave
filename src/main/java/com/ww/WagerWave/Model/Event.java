@@ -30,6 +30,9 @@ public class Event {
     @Column(name = "category", nullable = false)
     private String category;
 
+    @Column(name ="subcategory", nullable = false)
+    private String subcategory;
+
     @Column(name = "team_1", nullable = false)
     private String team1;
 
@@ -55,8 +58,16 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private EventResult eventResult;
 
+    //nowe kolumny potrzebne do pobieranie danych z api
+    @Column(name = "api_game_id", nullable = false)
+    private String apiGameId; // Kolumna 'api_game_id'
+
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EventStatus status = EventStatus.SCHEDULED;
+
+    @Column(name = "last_updated", nullable = false)
+    private LocalDateTime lastUpdated;
+
 }
 
-enum EventResult {
-    PENDING, TEAM_1, TEAM_2, DRAW
-}

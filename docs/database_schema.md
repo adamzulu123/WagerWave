@@ -55,7 +55,9 @@
 | `event_start_time` | TIMESTAMP      | DEFAULT CURRENT_TIMESTAMP, NOT NULL     | Czas rozpoczęcia wydarzenia.          |
 | `event_end_time`   | TIMESTAMP      | DEFAULT CURRENT_TIMESTAMP, NOT NULL     | Czas zakończenia wydarzenia.          |
 | `event_result`     | ENUM           | ('PENDING', 'TEAM_1', 'TEAM_2', 'DRAW'), DEFAULT 'PENDING', NOT NULL | Wynik wydarzenia.                     |
-
+| `api_game_id`|
+|`status`|
+|`last_updated`|
 ---
 
 ## 5. Tabela: `coupons`
