@@ -4,10 +4,14 @@ import com.ww.WagerWave.Model.MyUser;
 import com.ww.WagerWave.Model.Wallet;
 import com.ww.WagerWave.Repository.UserRepository;
 import com.ww.WagerWave.Repository.WalletRepository;
+import com.ww.WagerWave.Services.EmailSenderServices;
+import com.ww.WagerWave.Services.PasswordServices;
 import com.ww.WagerWave.Services.UserServices;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,10 +20,14 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.View;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
 
 
 @Controller
@@ -32,6 +40,12 @@ public class RegistrationController {
     private final UserServices userServices;
 
     private final WalletRepository walletRepository;
+
+    @Autowired
+    private final PasswordServices passwordServices;
+
+    @Autowired
+    private final EmailSenderServices emailSenderServices;
 
     @Autowired
     private UserRepository repo;
@@ -93,6 +107,43 @@ public class RegistrationController {
                 .build();
 
         walletRepository.save(defaultWallet);
+
+        return "redirect:/login";
+    }
+
+    //generowanie losowego tymczasowego hasła
+    private String generateTemporaryPass(){
+        return String.valueOf((int) (Math.random() * 1_000_000_000)).substring(0, 8);
+    }
+
+    @PostMapping("/forgot-password")
+    public String sendTempPassword(@RequestParam String emailForgetPass,
+                                   HttpSession session) {
+
+        Optional<MyUser> userOptional = userServices.findByEmail(emailForgetPass);
+        if (userOptional.isPresent()) {
+            MyUser user = userOptional.get();
+
+            String tempPassword = generateTemporaryPass();
+
+            passwordServices.updatePassword(user, tempPassword);
+
+            //wysyłanie maila z info o zmienionym hasle
+            String subject = "Password Reset";
+            String body = "Hi, \n\nYour temporary password is: " + tempPassword +
+                    "\n\nPlease log in and change your password as soon as possible." +
+                    "\n\nYour favorite WagerWave Team ;))))";
+
+            try {
+                emailSenderServices.sendEmail(emailForgetPass, subject, body);
+                session.setAttribute("message", "Temporary password has been sent to your email.");
+            } catch (Exception e) {
+                System.err.println("Error while sending mail: " + e.getMessage());
+                session.setAttribute("message", "Error while sending email: " + e.getMessage());
+            }
+        } else {
+            session.setAttribute("message", "No account associated with this email.");
+        }
 
         return "redirect:/login";
     }

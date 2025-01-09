@@ -46,9 +46,11 @@ public class BasketballApiServices {
                 .build();
     }
 
+
     //@PostConstruct powoduje ze wywołujemy to przy inicjacji tego obiektu, czyli zawsze podczas startu aplikacji
     //@Transactional zapewnia, że medoy będa działały w ramach jednej transakcji, jak cos pójdzie nie tak obie wycofane
     //@Async - metoda jest asychroniczna czyli bedzie działać w tle w osobnym wątku i nie blokować aplikacji
+    /*
     @PostConstruct
     @Transactional
     @Async
@@ -70,6 +72,7 @@ public class BasketballApiServices {
         getAndSaveGames(league, season, todayDate).subscribe();
         getAndSaveGames(league, season, tomorowDate).subscribe();
     }
+    */
 
     @Scheduled(initialDelay = 1800000, fixedRate = 3600000) // Po 30 minutach, a potem co godzinę
     public void scheduledEventUpdate(){

@@ -45,6 +45,10 @@ body h1{
     height: 100%;
     transition: all 0.6s ease-in-out;
 }
+.sign-in{
+    padding-top: 55px;
+    height: fit-content;
+}
 .sign-up{
     left: 0; /*left side of the sign-up form on the max left*/
     opacity: 0;
@@ -56,7 +60,7 @@ body h1{
     z-index: 2; /*to be sure that sign-in is infront signup */
 }
 
-form{
+form {
     background-color: mintcream;
     display: flex;
     flex-direction: column;
@@ -172,5 +176,25 @@ button:active{
 .error-message{
     color: red;
     font-size: medium;
+}
+.success-message{
+    margin-top: 5px;
+    color: green;
+    font-size: medium;
+}
+
+#passTitle{
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 20px;
+}
+#sendMailButton{
+    width: 30%;
+    margin: 10px;
+    padding: 3px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: transform 80ms ease-in;
 }
 
