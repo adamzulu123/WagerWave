@@ -104,7 +104,7 @@ function initializeAddToBasketButtons() {
 
             let betTeam = '';
             if (betResult == 'X') {
-                betTeam = 'Remis';
+                betTeam = 'Draw';
             }
             else if (betResult === '1') {
                 betTeam = eventBox.querySelector('.event-teams .team-name-1').innerText;
@@ -130,10 +130,10 @@ function initializeAddToBasketButtons() {
                     </div>
                 </div>
                 <div class="item-stake">
-                    <input type="number" class="stake-single form-control form-control-sm" min=0 placeholder="Stawka (zł)">
+                    <input type="number" class="stake-single form-control form-control-sm" min=0 placeholder="Stake (PLN)">
                     <span class="win-single">
-                        <span class="win-single-text">Pot. wygrana:</span><br>
-                        <span class="win-single-value">0.00</span> zł
+                        <span class="win-single-text">Potential win:</span><br>
+                        <span class="win-single-value">0,00</span> PLN
                     </span>
                 </div>
             `;
