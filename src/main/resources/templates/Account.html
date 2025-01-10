@@ -44,7 +44,7 @@
                     </form>
                     <!-- Password changing block -->
 
-                        <form th:action="@{/changePassword}" method="POST">
+                        <form th:action="@{/changePassword}" method="POST" id="change-password">
                             <div class="mb-3">
                                 <label for="currentPassword" class="form-label">Current Password</label>
                                 <input type="password" class="form-input form-control" id="currentPassword" name="currentPassword" placeholder="Current Password" required>
@@ -75,7 +75,7 @@
                         <button type="submit" class="btn btn-secondary w-100">Log Out</button>
                     </div>
                 </form>
-                <form th:action="@{/deleteAccount}" method="POST">
+                <form th:action="@{/deleteAccount}" method="POST" id="delete-account">
                     <div class="mb-3">
                         <label for="password" class="form-label">Enter your password to confirm deletion</label>
                         <input type="password" class="form-input form-control" id="password" name="password" placeholder="Password" required>
@@ -88,7 +88,7 @@
     </div>
 
     <!--Wallet management -->
-    <div class="container-fluid wallet mt-4">
+    <div class="container-fluid wallet mt-4" id="wallet">
         <div class="wallet-section text-center">
             <h4 class="wallet-title">Wallet Balance</h4>
             <div class="wallet-icon">
@@ -106,7 +106,7 @@
     </div>
 
     <!-- Daily limit management -->
-    <div class="container-fluid limit mt-4">
+    <div class="container-fluid limit mt-4" id="daily-limit">
         <div class="limit-section text-center">
             <h4 class="limit-title">Set Daily Limit</h4>
             <p>Current Limit: <span id="dailyLimit" th:text="${wallet.dailyLimit}"> PLN</span></p>

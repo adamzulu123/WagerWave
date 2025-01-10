@@ -11,7 +11,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-md navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">WagerWave</a>
+            <a class="navbar-brand" th:href="@{/Main}">WagerWave</a>
             
             <!-- Hamburger button (widoczny na mniejszych ekranach) -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,35 +22,39 @@
                 <!-- Lewa część menu -->
                 <ul class="navbar-nav">
                     <li class="nav-item active" id="bets">
-                        <a class="nav-link" href="#">Bets</a>
+                        <a class="nav-link" th:href="@{/Main}">Bets</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">History</a>
+                        <a class="nav-link" th:href="@{/History}">History</a>
                     </li>
                 </ul>
                 
                 <!-- Prawa część menu (kwota i imię) -->
                 <ul class="navbar-nav ms-auto"> <!-- Dodano ms-auto do wypozycjonowania po prawej stronie -->
                     <li class="nav-item" id="wallet">
-                        <a class="nav-link" href="#"><img src="../images/Wallet.png" alt="wallet">100,00 PLN</a>
+                        <a class="nav-link" th:href="@{/Account#wallet}"><img src="../images/Wallet.png" alt="wallet">100,00 PLN</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="../images/User.png" alt="user">Jan Kowalski
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="#">My account</a></li>
-                            <li><a class="dropdown-item" href="#">My wallet</a></li>
+                            <li><a class="dropdown-item" th:href="@{/Account}">My account</a></li>
+                            <li><a class="dropdown-item" th:href="@{/Account#wallet}">My wallet</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Bets</a></li>
-                            <li><a class="dropdown-item" href="#">History</a></li>
+                            <li><a class="dropdown-item" th:href="@{/Main}">Bets</a></li>
+                            <li><a class="dropdown-item" th:href="@{/History}">History</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Daily limit</a></li>
+                            <li><a class="dropdown-item" th:href="@{/Account#daily-limit}">Daily limit</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Change password</a></li>
-                            <li><a class="dropdown-item" href="#">Delete account</a></li>
+                            <li><a class="dropdown-item" th:href="@{/Account}">Change password</a></li>
+                            <li><a class="dropdown-item" th:href="@{/Account}">Delete account</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Logout</a></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post" style="display: inline;">
+                                    <button type="submit" class="dropdown-item" style="cursor: pointer;">Logout</button>
+                                </form>
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -226,7 +230,7 @@
                         <div id="combo-summary" class="d-none">
                             <span class="d-flex justify-content-between mb-3">
                                 <input type="number" class="stake-combo form-control form-control-sm" min=0 placeholder="Stake (PLN)">
-                                <span id="combo-total-odds">3,88</span>
+                                <span id="combo-total-odds">0,00</span>
                             </span>
                             <p>Potential win: <span id="combo-potential-win">0,00</span> PLN</p>
                         </div>
