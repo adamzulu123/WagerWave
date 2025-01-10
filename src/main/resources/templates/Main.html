@@ -3,31 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Betting App - Home</title>
+    <title>WagerWave</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="../css/Main.css" rel="stylesheet">
 </head>
 <body>
-<header>
-    <h1>Welcome to Betting App</h1>
-</header>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">WagerWave</a>
+            
+            <!-- Hamburger button (widoczny na mniejszych ekranach) -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-<nav>
-    <a th:href="@{/}">Home</a>
-    <a th:href="@{/Account}">YourAccount</a>
-</nav>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Lewa część menu -->
+                <ul class="navbar-nav">
+                    <li class="nav-item active" id="bets">
+                        <a class="nav-link" href="#">Zakłady</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Historia</a>
+                    </li>
+                </ul>
+                
+                <!-- Prawa część menu (kwota i imię) -->
+                <ul class="navbar-nav ms-auto"> <!-- Dodano ms-auto do wypozycjonowania po prawej stronie -->
+                    <li class="nav-item" id="wallet">
+                        <a class="nav-link" href="#"><img src="../images/Wallet.png" alt="wallet">100,00 zł</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="../images/User.png" alt="user">Jan Kowalski
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="#">Moje konto</a></li>
+                            <li><a class="dropdown-item" href="#">Portfel</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Zakłady</a></li>
+                            <li><a class="dropdown-item" href="#">Historia</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Dzienny limit</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Zmień hasło</a></li>
+                            <li><a class="dropdown-item" href="#">Usuń konto</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Wyloguj się</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<div class="content">
-    <h2>Upcoming Sports Events</h2>
-    <div th:if="${events != null}">
-        <ul>
-            <li th:each="event : ${events}">
-                <span th:text="${event.name}">Event Name</span> -
-                <span th:text="${event.date}">Event Date</span>
-            </li>
-        </ul>
+
+    <!-- Main Content -->
+    <div class="container-fluid" id="main">
+        <div class="row">
+            <!-- Left Column (Categories) -->
+            <div class="col-md-3">
+                <div class="categories-box p-2 rounded">
+                    <h5>Kategorie</h5>
+                    <div class="accordion" id="categoryAccordion">
+                        <!-- Koszykówka -->
+                        <div class="accordion-item">
+                            <h6 class="accordion-header" id="headingBasketball">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBasketball" aria-expanded="false" aria-controls="collapseBasketball">
+                                    Koszykówka
+                                </button>
+                            </h6>
+                            <div id="collapseBasketball" class="accordion-collapse collapse" aria-labelledby="headingBasketball" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a class="text-decoration-none" href="#">Wszystkie</a></li>
+                                        <li><a class="text-decoration-none" href="#">NBA</a></li>
+                                        <li><a class="text-decoration-none" href="#">Euroliga</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Piłka nożna -->
+                        <div class="accordion-item">
+                            <h6 class="accordion-header" id="headingFootball">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFootball" aria-expanded="false" aria-controls="collapseFootball">
+                                    Piłka nożna
+                                </button>
+                            </h6>
+                            <div id="collapseFootball" class="accordion-collapse collapse" aria-labelledby="headingFootball" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a class="text-decoration-none" href="#">Wszystkie</a></li>
+                                        <li><a class="text-decoration-none" href="#">Premier League</a></li>
+                                        <li><a class="text-decoration-none" href="#">La Liga</a></li>
+                                        <li><a class="text-decoration-none" href="#">Serie A</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <!-- MMA -->
+                        <div class="accordion-item">
+                            <h6 class="accordion-header" id="headingMMA">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMMA" aria-expanded="false" aria-controls="collapseMMA">
+                                    MMA
+                                </button>
+                            </h6>
+                            <div id="collapseMMA" class="accordion-collapse collapse" aria-labelledby="headingMMA" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a class="text-decoration-none" href="#">Wszystkie</a></li>
+                                        <li><a class="text-decoration-none" href="#">UFC</a></li>
+                                        <li><a class="text-decoration-none" href="#">Bellator</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+
+            <!-- Middle Column (Events) -->
+            <div class="col-md-5">
+                <div class="events-container p-3 rounded">
+                    <h5 class="text-center">Wydarzenia</h5>
+                    
+                    <!-- Pojedyncze wydarzenie -->
+                    <div class="event-box rounded">
+                        <div class="event-header d-flex justify-content-between">
+                            <span class="event-date-time">2024-12-18 18:00</span>
+                            <span class="event-name">NBA: Lakers vs Celtics</span>
+                        </div>
+                        <div class="event-teams d-flex justify-content-between my-2">
+                            <span class="team-name-1">Lakers</span>
+                            <span class="team-name-2">Celtics</span>
+                        </div>
+                        <div class="event-buttons d-flex justify-content-between">
+                            <button class="btn btn-outline-primary btn-sm"><span>1</span><br><strong>1.85</strong></button>
+                            <button class="btn btn-outline-primary btn-sm"><span>X</span><br><strong>3.40</strong></button>
+                            <button class="btn btn-outline-primary btn-sm"><span>2</span><br><strong>2.10</strong></button>
+                        </div>
+                    </div>
+
+                    <div class="event-box rounded">
+                        <div class="event-header d-flex justify-content-between">
+                            <span class="event-date-time">2024-12-18 21:00</span>
+                            <span class="event-name">Serie A: Juventus vs Inter</span>
+                        </div>
+                        <div class="event-teams d-flex justify-content-between my-2">
+                            <span class="team-name-1">Juventus</span>
+                            <span class="team-name-2">Inter</span>
+                        </div>
+                        <div class="event-buttons d-flex justify-content-between">
+                            <button class="btn btn-outline-primary btn-sm"><span>1</span><br><strong>2.20</strong></button>
+                            <button class="btn btn-outline-primary btn-sm"><span>X</span><br><strong>3.10</strong></button>
+                            <button class="btn btn-outline-primary btn-sm"><span>2</span><br><strong>2.80</strong></button>
+                        </div>
+                    </div>
+
+                    <div class="event-box rounded">
+                        <div class="event-header d-flex justify-content-between">
+                            <span class="event-date-time">2024-12-22 12:00</span>
+                            <span class="event-name">Derby Krosna</span>
+                        </div>
+                        <div class="event-teams d-flex justify-content-between my-2">
+                            <span class="team-name-1">Pasja Krosno</span>
+                            <span class="team-name-2">Karpaty Krosno</span>
+                        </div>
+                        <div class="event-buttons d-flex justify-content-between">
+                            <button class="btn btn-outline-primary btn-sm"><span>1</span><br><strong>1.07</strong></button>
+                            <button class="btn btn-outline-primary btn-sm"><span>X</span><br><strong>7.80</strong></button>
+                            <button class="btn btn-outline-primary btn-sm"><span>2</span><br><strong>12.30</strong></button>
+                        </div>
+                    </div>
+                </div>
+                <footer class="text-center">
+                    <p>© 2024 WagerWave. Wszystkie prawa zastrzeżone.</p>
+                </footer>
+            </div>
+
+
+
+            <!-- Right Column (Basket) -->
+            <div class="col-md-4" id="basket-column">
+                <div class="basket-container">
+                    <div class="basket-header">
+                        <h5>Twoje zakłady</h5>
+                        <div class="d-flex justify-content-around mt-3">
+                            <button class="btn active" id="single-btn">Pojedynczo</button>
+                            <button class="btn" id="combo-btn">Kupon</button>
+                        </div>
+                    </div>
+
+                    <!-- Single bets -->
+                    <div class="basket-body mt-3">
+                        <div class="basket-section" id="single-section">
+                            <div class="basket-items">
+                                
+                            </div>
+                        </div>
+
+                        <!-- Combo bets -->
+                        <div class="basket-section d-none" id="combo-section">
+                            <div class="basket-items">
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary -->
+                    <div class="basket-summary">
+                        <div id="single-summary">
+                            <p>Łączna stawka: <span id="single-total-stake">0.00</span> zł</p>
+                            <p>Potencjalna wygrana: <span id="single-potential-win">0.00</span> zł</p>
+                        </div>
+
+                        <div id="combo-summary" class="d-none">
+                            <span class="d-flex justify-content-between mb-3">
+                                <input type="number" class="stake-combo form-control form-control-sm" min=0 placeholder="Stawka (zł)">
+                                <span id="combo-total-odds">3.88</span>
+                            </span>
+                            <p>Potencjalna wygrana: <span id="combo-potential-win">0.00</span> zł</p>
+                        </div>
+
+                        <button class="btn" id="summary-button">Obstaw</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div th:if="${events == null}">
-        <p>No upcoming events at the moment. Please check back later!</p>
-    </div>
-</div>
+
+    <!-- Linki do skryptów JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="../js/Main.js" defer></script>
 </body>
 </html>
