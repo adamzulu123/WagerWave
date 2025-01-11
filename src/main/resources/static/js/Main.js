@@ -7,6 +7,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Inicjalizacja funkcjonalności dodawania do koszyka
     initializeAddToBasketButtons();
+
+    //funkcjonalnośc do pobierania i wyswietlania meczy z danej kategorii
+    initializeDynamicEventLoading();
+
 });
 
 /**
@@ -168,3 +172,77 @@ function initializeAddToBasketButtons() {
         });
     });
 }
+
+/**
+ * endpoint do dynamicznego pobierania meczy z danej kategorii
+ */
+function initializeDynamicEventLoading(){
+    const categoryLinks = document.querySelectorAll('.categories-box a');
+    const eventsContainer = document.querySelector('.events-container');
+
+    categoryLinks.forEach(link=>{
+        link.addEventListener('click', function(event){
+            event.preventDefault()
+
+            //pobieramy categori i subkategorie
+            //this.closest() - szuka najbliższego przodka elementu (w tym przypadku linku)
+            const categoryButton = this.closest('div.accordion-item').querySelector('.accordion-button');
+            const category = categoryButton.dataset.categoryId;
+            const subcategory = this.dataset.subcategoryId;
+
+            eventsContainer.innerHTML = '<p>Loading events...</p>';
+
+            fetch(`/api/events?category=${category}&subcategory=${subcategory}`)
+                .then(response => response.json())
+                .then(events => {
+                    eventsContainer.innerHTML = '';
+
+                    if (events && events.length > 0) {
+                        events.forEach(event => {
+                            const eventHtml = `
+                                <div class="event-box rounded">
+                                    <div class="event-header d-flex justify-content-between">
+                                        <span class="event-date-time">${event.eventStartTime}</span>
+                                        <span class="event-name">${event.eventName}</span>
+                                    </div>
+                                    <div class="event-teams d-flex justify-content-between my-2">
+                                        <span class="team-name-1">${event.team1}</span>
+                                        <span class="team-name-2">${event.team2}</span>
+                                    </div>
+                                    <div class="event-buttons d-flex justify-content-between">
+                                        <button class="btn btn-outline-primary btn-sm"><span>1</span><br><strong>${event.oddsTeam1}</strong></button>
+                                        <button class="btn btn-outline-primary btn-sm"><span>X</span><br><strong>${event.oddsDraw}</strong></button>
+                                        <button class="btn btn-outline-primary btn-sm"><span>2</span><br><strong>${event.oddsTeam2}</strong></button>
+                                    </div>
+                                </div>`;
+                            eventsContainer.innerHTML += eventHtml;
+                        });
+                    } else {
+                        eventsContainer.innerHTML = '<p>No events found for this category.</p>';
+                    }
+
+                    //inicjalizacja przycisków
+                    initializeAddToBasketButtons()
+
+                })
+                .catch(error => {
+                    console.error('Error loading events:', error);
+                    eventsContainer.innerHTML = '<p>Error loading events. Please try again later.</p>';
+                });
+        });
+    });
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

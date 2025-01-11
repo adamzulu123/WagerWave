@@ -50,7 +50,7 @@ public class BasketballApiServices {
     //@PostConstruct powoduje ze wywołujemy to przy inicjacji tego obiektu, czyli zawsze podczas startu aplikacji
     //@Transactional zapewnia, że medoy będa działały w ramach jednej transakcji, jak cos pójdzie nie tak obie wycofane
     //@Async - metoda jest asychroniczna czyli bedzie działać w tle w osobnym wątku i nie blokować aplikacji
-    /*
+
     @PostConstruct
     @Transactional
     @Async
@@ -58,7 +58,7 @@ public class BasketballApiServices {
         String league = "12";
         String season = "2024-2025";
         LocalDate today = LocalDate.now();
-        LocalDate tomorow = today.plusDays(3);
+        LocalDate tomorow = today.plusDays(1);
         //LocalDate twoDaysAfter = today.plusDays(4);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -72,14 +72,15 @@ public class BasketballApiServices {
         getAndSaveGames(league, season, todayDate).subscribe();
         getAndSaveGames(league, season, tomorowDate).subscribe();
     }
-    */
+
+
 
     @Scheduled(initialDelay = 1800000, fixedRate = 3600000) // Po 30 minutach, a potem co godzinę
     public void scheduledEventUpdate(){
         String league = "12";
         String season = "2024-2025";
         LocalDate today = LocalDate.now();
-        LocalDate tomorow = today.plusDays(3);
+        LocalDate tomorow = today.plusDays(1);
         //LocalDate twoDaysAfter = today.plusDays(4);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -148,6 +149,9 @@ public class BasketballApiServices {
         //game_id z API bo potem bedziemy pobieraly odds prawdopodobnie
         String gameId = game.get("id").getAsString();
 
+        JsonObject league = game.get("league").getAsJsonObject();
+        String subcategory = league.get("name").getAsString();
+
         //pobieranie drużyn z api
         JsonObject homeTeam = game.getAsJsonObject("teams").getAsJsonObject("home");
         JsonObject awayTeam = game.getAsJsonObject("teams").getAsJsonObject("away");
@@ -168,7 +172,7 @@ public class BasketballApiServices {
                 .apiGameId(gameId)
                 .eventName(homeTeam.get("name").getAsString() + " vs " + awayTeam.get("name").getAsString())
                 .category("Basketball")
-                .subcategory("NBA")
+                .subcategory(subcategory)
                 .team1(homeTeam.get("name").getAsString())
                 .team2(awayTeam.get("name").getAsString())
                 .oddsTeam1(oddsTeam1)
