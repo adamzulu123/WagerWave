@@ -51,6 +51,3 @@ public class Coupon {
     }
 }
 
-enum CouponResult {
-    PENDING, WON, LOST
-}

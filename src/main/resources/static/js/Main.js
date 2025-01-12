@@ -16,6 +16,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Walidacja koszyka
     validateBasket();
+
+    //inicjalizacja przycisku do stawiania kuponu
+    initializePlaceBetsButton();
+
 });
 
 /**
@@ -114,6 +118,11 @@ function initializeAddToBasketButtons() {
             const betResult = button.querySelector('span').innerText;
             const eventOdds = button.querySelector('strong').innerText;
 
+            const eventID = eventBox.getAttribute('data-event-id'); //pobieramy id eventu
+            const eventEndTime = eventBox.getAttribute('data-event-end-time');
+            console.log(eventID);
+            //console.log(eventEndTime);
+
             console.log(betResult);
 
             let betTeam = '';
@@ -129,6 +138,9 @@ function initializeAddToBasketButtons() {
             
             const basketItem = document.createElement('div');
             basketItem.classList.add('basket-item');
+
+            basketItem.setAttribute('data-event-id', eventID); //Przypisanie eventID do elementu koszyka
+            basketItem.setAttribute('data-event-end-time', eventEndTime);
 
             if (singleBtn.classList.contains('active')) {
 
@@ -322,6 +334,118 @@ function validateBasket() {
     }
 }
 
+
+
+//STREFA BETOWANIA i pobierania meczy
+
+
+
+
+/**
+ * inicajlizacja przycisku do betowania
+ */
+function initializePlaceBetsButton() {
+    const summaryBtn = document.getElementById('summary-button');
+    if (!summaryBtn) {
+        console.error('Nie znaleziono przycisku summary-button!');
+        return;
+    }
+    summaryBtn.addEventListener('click', () => {
+        sendBetsDetailsToBackend();
+    });
+}
+/**
+ * funkcja do przekazywania danych o bet z frondend do backend
+ */
+function sendBetsDetailsToBackend() {
+    const singleBtn = document.getElementById('single-btn');
+    const comboBtn = document.getElementById('combo-btn');
+
+    const betsData = {
+        type: singleBtn.classList.contains('active') ? 'SINGLE' : 'COMBO',
+        bets: [],
+    };
+    /*
+    POJEDYNCZE ZAKŁADY!
+    */
+    if (singleBtn.classList.contains('active')) {
+        //dane do pojedynczych zakładów
+        const singleBasketItems = document.querySelectorAll('#single-section .basket-item');
+        singleBasketItems.forEach(item => {
+            const eventID = item.getAttribute('data-event-id');
+            const odds = parseFloat(item.querySelector('.event-odds').innerText);
+            const stake = parseFloat(item.querySelector('.stake-single').value);
+            const potentialWin = parseFloat(item.querySelector('.win-single-value').innerText);
+            const betTeam = item.querySelector('.bet-team').innerText;
+            const betType = betTeam === 'Draw' ? 'DRAW' :
+                (betTeam === item.querySelector('.bet-team').innerText ? 'TEAM_1' : 'TEAM_2');
+
+            const betEndTime = item.getAttribute('data-event-end-time');
+
+            betsData.bets.push({
+                eventID,
+                betTeam,
+                betType,
+                odds,
+                stake,
+                potentialWin,
+                betEndTime,
+            });
+        });
+    }
+    /*
+    KUPONY!
+    */
+    else if (comboBtn.classList.contains('active')) {
+        //zbieranie danych dla kuponów
+        const comboBasketItems = document.querySelectorAll('#combo-section .basket-item');
+        const stakeCombo = document.querySelector('#combo-summary .stake-combo');
+        const comboTotalOdds = document.querySelector('#combo-summary #combo-total-odds');
+        const comboPotentialWin = document.querySelector('#combo-summary #combo-potential-win');
+
+        const stake = parseFloat(stakeCombo.value) || 0;
+        const totalOdds = parseFloat(comboTotalOdds.innerText) || 0;
+        const potentialWin = parseFloat(comboPotentialWin.innerText) || 0;
+
+        comboBasketItems.forEach(item => {
+            //solo-bets info do kuponu
+            const eventID = item.getAttribute('data-event-id');
+            const betEndTime = item.getAttribute('data-event-end-time');
+            const odds = parseFloat(item.querySelector('.event-odds').innerText);
+            const betTeam = item.querySelector('.bet-team').innerText;
+            const betType = betTeam === 'Draw' ? 'DRAW' :
+                (betTeam === item.querySelector('.bet-team').innerText ? 'TEAM_1' : 'TEAM_2');
+
+            betsData.bets.push({
+                eventID,
+                betTeam,
+                betType,
+                odds,
+                betEndTime,
+            });
+        });
+
+        //teraz info do kuponu potrzebne
+        betsData.couponData = ({
+            odds: totalOdds,
+            stake: stake,
+            potentialWin,
+        });
+
+    }
+    console.log('Dane zakładów:', betsData);
+
+
+    //wysyłanie danych do backend
+    //fetch('appAPI/placeBets, {})
+
+
+
+}
+
+
+
+
 /**
  * endpoint do dynamicznego pobierania meczy z danej kategorii
  */
@@ -349,8 +473,12 @@ function initializeDynamicEventLoading(){
                     if (events && events.length > 0) {
                         events.forEach(event => {
                             const eventTime = event.eventStartTime.replace('T', ' ').slice(0, 16);
+                            const eventEndTime = event.eventEndTime.replace('T', ' ').slice(0, 16);
+
+                            //id i eventEndTime przekezuje tutaj jako aktrybut potem do pobrania przy tworzeniu zakładu
+                            //żeby potem nie musieć zadawac kolejnego pytania do bazy przy dodawaniu bet do bazy.
                             const eventHtml = `
-                                <div class="event-box rounded">
+                                <div class="event-box rounded" data-event-id="${event.id}" data-event-end-time="${eventEndTime}">
                                     <div class="event-header d-flex justify-content-between">
                                         <span class="event-date-time">${eventTime}</span>
                                         <span class="event-name">${event.eventName}</span>

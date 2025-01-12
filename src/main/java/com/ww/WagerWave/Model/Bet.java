@@ -63,10 +63,3 @@ public class Bet {
     }
 }
 
-enum BetType {
-    TEAM_1, TEAM_2, DRAW
-}
-
-enum BetResult {
-    PENDING, WON, LOST
-}
