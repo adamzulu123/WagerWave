@@ -13,6 +13,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Inicjalizacja funkcjonalności koszyka
     updateBasketSummary();
+
+    // Walidacja koszyka
+    validateBasket();
 });
 
 /**
@@ -31,6 +34,7 @@ function initializeBetButtons() {
         toggleSections(singleSummary, comboSummary);
         singleBtn.classList.add('active');
         comboBtn.classList.remove('active');
+        updateBasketSummary();
     });
 
     comboBtn.addEventListener('click', () => {
@@ -38,6 +42,7 @@ function initializeBetButtons() {
         toggleSections(comboSummary, singleSummary);
         singleBtn.classList.remove('active');
         comboBtn.classList.add('active');
+        updateBasketSummary();
     });
 }
 
@@ -210,46 +215,111 @@ function initializeAddToBasketButtons() {
  * Funkcja aktualizująca koszyk
  */
 function updateBasketSummary() {
-    const singleBasketItems = document.querySelectorAll('#single-section .basket-item');
-    const singleTotalStake = document.querySelector('#single-summary #single-total-stake');
-    const singlePotentialWin = document.querySelector('#single-summary #single-potential-win');
+    const singleBtn = document.getElementById('single-btn');
+    const comboBtn = document.getElementById('combo-btn');
 
-    const comboBasketItems = document.querySelectorAll('#combo-section .basket-item');
-    const stakeCombo = document.querySelector('#combo-summary .stake-combo');
-    const comboTotalOdds = document.querySelector('#combo-summary #combo-total-odds');
-    const comboPotentialWin = document.querySelector('#combo-summary #combo-potential-win');
-
-    let singleTotal = 0;
-    let singleWin = 0;
-    singleBasketItems.forEach(item => {
-        const stakeInput = item.querySelector('.stake-single');
-        const odds = parseFloat(item.querySelector('.event-odds').innerText);
-        const stake = parseFloat(stakeInput.value) || 0;
-        const winValue = stake * odds * 0.88;
-
-        singleTotal += stake;
-        singleWin += winValue;
-
-        item.querySelector('.win-single-value').innerText = winValue.toFixed(2);
-    });
-
-    singleTotalStake.innerText = singleTotal.toFixed(2);
-    singlePotentialWin.innerText = singleWin.toFixed(2);
-
-    let comboOdds = 0.00;
-    if (comboBasketItems.length > 0) {
-        comboOdds = 1.00;
+    if (singleBtn.classList.contains('active')) {
+        updateSingleBasketSummary();
+    }
+    else if (comboBtn.classList.contains('active')) {
+        updateComboBasketSummary();
     }
 
-    comboBasketItems.forEach(item => {
-        const odds = parseFloat(item.querySelector('.event-odds').innerText);
-        comboOdds *= odds;
-    });
+    validateBasket();
 
-    let comboTotal = parseFloat(stakeCombo.value) || 0;
-    comboTotalOdds.innerText = comboOdds.toFixed(2);
-    comboPotentialWin.innerText = (comboTotal * 0.88 * comboOdds).toFixed(2);
+    function updateSingleBasketSummary() {
+        const singleBasketItems = document.querySelectorAll('#single-section .basket-item');
+        const singleTotalStake = document.querySelector('#single-summary #single-total-stake');
+        const singlePotentialWin = document.querySelector('#single-summary #single-potential-win');
 
+        let singleTotal = 0;
+        let singleWin = 0;
+        singleBasketItems.forEach(item => {
+            const stakeInput = item.querySelector('.stake-single');
+            const odds = parseFloat(item.querySelector('.event-odds').innerText);
+            const stake = parseFloat(stakeInput.value) || 0;
+            const winValue = stake * odds * 0.88;
+
+            singleTotal += stake;
+            singleWin += winValue;
+
+            item.querySelector('.win-single-value').innerText = winValue.toFixed(2);
+        });
+
+        singleTotalStake.innerText = singleTotal.toFixed(2);
+        singlePotentialWin.innerText = singleWin.toFixed(2);
+    }
+
+    function updateComboBasketSummary() {
+        const comboBasketItems = document.querySelectorAll('#combo-section .basket-item');
+        const stakeCombo = document.querySelector('#combo-summary .stake-combo');
+        const comboTotalOdds = document.querySelector('#combo-summary #combo-total-odds');
+        const comboPotentialWin = document.querySelector('#combo-summary #combo-potential-win');
+
+        let comboOdds = 0.00;
+        if (comboBasketItems.length > 0) {
+            comboOdds = 1.00;
+        }
+
+        comboBasketItems.forEach(item => {
+            const odds = parseFloat(item.querySelector('.event-odds').innerText);
+            comboOdds *= odds;
+        });
+
+        let comboTotal = parseFloat(stakeCombo.value) || 0;
+        comboTotalOdds.innerText = comboOdds.toFixed(2);
+        comboPotentialWin.innerText = (comboTotal * 0.88 * comboOdds).toFixed(2);
+    }
+}
+
+/**
+ * Funkcja walidująca koszyk
+ */
+function validateBasket() {
+    const singleBtn = document.getElementById('single-btn');
+    const comboBtn = document.getElementById('combo-btn');
+    const summaryButton = document.getElementById('summary-button');
+
+    let isValid = true;
+    let message = 'Place a bet';
+
+    if (singleBtn.classList.contains('active')) {
+        const singleBasketItems = document.querySelectorAll('#single-section .basket-item');
+        if (singleBasketItems.length === 0) {
+            isValid = false;
+            message = "Add a bet";
+        } else {
+            singleBasketItems.forEach(item => {
+                const stakeInput = item.querySelector('.stake-single');
+                const stake = parseFloat(stakeInput.value) || 0;
+                if (stake <= 0) {
+                    isValid = false;
+                    message = "Provide a stake";
+                }
+            });
+        }
+    } else if (comboBtn.classList.contains('active')) {
+        const comboBasketItems = document.querySelectorAll('#combo-section .basket-item');
+        const stakeCombo = document.querySelector('#combo-summary .stake-combo');
+        const stake = parseFloat(stakeCombo.value) || 0;
+        if (comboBasketItems.length === 0) {
+            isValid = false;
+            message = "Add a bet";
+        } else if (stake <= 0) {
+            isValid = false;
+            message = "Provide a stake";
+        }
+    }
+
+    if (isValid) {
+        summaryButton.disabled = false;
+        summaryButton.classList.remove('btn-error');
+        summaryButton.innerText = "Place a bet";
+    } else {
+        summaryButton.disabled = true;
+        summaryButton.classList.add('btn-error');
+        summaryButton.innerText = message;
+    }
 }
 
 /**

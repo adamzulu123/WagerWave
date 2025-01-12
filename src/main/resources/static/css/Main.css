@@ -187,7 +187,7 @@ body {
     color: white;
     font-size: 0.95rem;
     transition: color 0.2s;
-    padding: none;
+    padding: 0;
 }
 
 .accordion-body a:hover {
