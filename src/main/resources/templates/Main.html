@@ -32,11 +32,15 @@
                 <!-- Prawa część menu (kwota i imię) -->
                 <ul class="navbar-nav ms-auto"> <!-- Dodano ms-auto do wypozycjonowania po prawej stronie -->
                     <li class="nav-item" id="wallet">
-                        <a class="nav-link" th:href="@{/Account#wallet}"><img src="../images/Wallet.png" alt="wallet">100,00 PLN</a>
+                        <a class="nav-link" th:href="@{/Account#wallet}">
+                            <img src="../images/Wallet.png" alt="wallet">
+                            <span th:text="${wallet.balance} + ' PLN'">0,00 PLN</span>
+                        </a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="../images/User.png" alt="user">Jan Kowalski
+                            <img src="../images/User.png" alt="user">
+                            <span th:text="${user.firstName}+' '+${user.lastName}"> User Name</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" th:href="@{/Account}">My account</a></li>
