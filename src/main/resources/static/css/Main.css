@@ -5,6 +5,10 @@ body {
     flex-direction: column;
     min-height: 100vh;
     background: linear-gradient(130deg, rgba(2, 61, 84, 1) 0%, rgba(46, 139, 87, 1) 35%, rgba(255, 255, 102, 1) 100%);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100vw 100vh;
 }
 
 /* Ustawienia nawigacji */
