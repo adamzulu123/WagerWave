@@ -140,53 +140,32 @@
             <div class="col-md-5">
                 <div class="events-container p-3 rounded">
                     <h5 class="text-center">Events</h5>
-                    
-                    <!-- Pojedyncze wydarzenie -->
-                    <div class="event-box rounded">
-                        <div class="event-header d-flex justify-content-between">
-                            <span class="event-date-time">2024-12-18 18:00</span>
-                            <span class="event-name">NBA: Lakers vs Celtics</span>
-                        </div>
-                        <div class="event-teams d-flex justify-content-between my-2">
-                            <span class="team-name-1">Lakers</span>
-                            <span class="team-name-2">Celtics</span>
-                        </div>
-                        <div class="event-buttons d-flex justify-content-between">
-                            <button class="btn btn-outline-primary btn-sm"><span>1</span><br><strong>1,85</strong></button>
-                            <button class="btn btn-outline-primary btn-sm"><span>X</span><br><strong>3,40</strong></button>
-                            <button class="btn btn-outline-primary btn-sm"><span>2</span><br><strong>2,10</strong></button>
-                        </div>
+
+                    <!-- IF no event available -->
+                    <div th:if="${events.isEmpty()}">
+                        <p class="text-center">No upcoming events available.</p>
                     </div>
 
-                    <div class="event-box rounded">
+                    <!-- Showing available events -->
+                    <div th:each="event : ${events}" class="event-box rounded">
                         <div class="event-header d-flex justify-content-between">
-                            <span class="event-date-time">2024-12-18 21:00</span>
-                            <span class="event-name">Serie A: Juventus vs Inter</span>
+                            <span class="event-date-time" th:text="${event.eventStartTime}"></span>
+                            <span class="event-name" th:text="${event.eventName}"></span>
                         </div>
                         <div class="event-teams d-flex justify-content-between my-2">
-                            <span class="team-name-1">Juventus</span>
-                            <span class="team-name-2">Inter</span>
+                            <span class="team-name-1" th:text="${event.team1}"></span>
+                            <span class="team-name-2" th:text="${event.team2}"></span>
                         </div>
                         <div class="event-buttons d-flex justify-content-between">
-                            <button class="btn btn-outline-primary btn-sm"><span>1</span><br><strong>2,20</strong></button>
-                            <button class="btn btn-outline-primary btn-sm"><span>X</span><br><strong>3,10</strong></button>
-                            <button class="btn btn-outline-primary btn-sm"><span>2</span><br><strong>2,80</strong></button>
-                        </div>
-                    </div>
-
-                    <div class="event-box rounded">
-                        <div class="event-header d-flex justify-content-between">
-                            <span class="event-date-time">2024-12-22 12:00</span>
-                            <span class="event-name">Derby Krosna</span>
-                        </div>
-                        <div class="event-teams d-flex justify-content-between my-2">
-                            <span class="team-name-1">Pasja Krosno</span>
-                            <span class="team-name-2">Karpaty Krosno</span>
-                        </div>
-                        <div class="event-buttons d-flex justify-content-between">
-                            <button class="btn btn-outline-primary btn-sm"><span>1</span><br><strong>1,07</strong></button>
-                            <button class="btn btn-outline-primary btn-sm"><span>X</span><br><strong>7,80</strong></button>
-                            <button class="btn btn-outline-primary btn-sm"><span>2</span><br><strong>12,30</strong></button>
+                            <button class="btn btn-outline-primary btn-sm">
+                                <span>1</span><br><strong th:text="${event.oddsTeam1}"></strong>
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm">
+                                <span>X</span><br><strong th:text="${event.oddsDraw}"></strong>
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm">
+                                <span>2</span><br><strong th:text="${event.oddsTeam2}"></strong>
+                            </button>
                         </div>
                     </div>
                 </div>

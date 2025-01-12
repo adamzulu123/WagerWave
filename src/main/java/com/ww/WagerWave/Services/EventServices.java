@@ -1,6 +1,8 @@
 package com.ww.WagerWave.Services;
 
 import com.ww.WagerWave.Model.Event;
+import com.ww.WagerWave.Model.EventResult;
+import com.ww.WagerWave.Model.EventStatus;
 import com.ww.WagerWave.Repository.EventRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -20,9 +22,18 @@ public class EventServices {
         Sort sort = Sort.by(Sort.Order.asc("eventStartTime")); //sortwanie aby najnowsze events były u góry
 
         if (subcategory != null && !subcategory.isEmpty() && !subcategory.equals("ALL")) {
-            return eventRepository.findByCategoryAndSubcategoryAndEventStartTimeAfter(category, subcategory, today, sort);
+            return eventRepository.findByCategoryAndSubcategoryAndEventStartTimeAfterAndEventResult(
+                    category, subcategory, today, EventResult.PENDING, sort);
         }
-        return eventRepository.findByCategoryAndEventStartTimeAfter(category, today, sort);
+        return eventRepository.findByCategoryAndEventStartTimeAfterAndEventResult(
+                category, today, EventResult.PENDING, sort);
+    }
+
+    //pobieramy wydarzenia do basic generowania stronki
+    public List<Event> getUpcomingEvents() {
+        LocalDateTime today = LocalDateTime.now();
+        Sort sort = Sort.by(Sort.Order.asc("eventStartTime"));
+        return eventRepository.findAllByEventStartTimeAfterAndEventResult(today, EventResult.PENDING, sort);
     }
 
 }

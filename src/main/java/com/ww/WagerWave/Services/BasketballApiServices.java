@@ -50,7 +50,7 @@ public class BasketballApiServices {
     //@PostConstruct powoduje ze wywołujemy to przy inicjacji tego obiektu, czyli zawsze podczas startu aplikacji
     //@Transactional zapewnia, że medoy będa działały w ramach jednej transakcji, jak cos pójdzie nie tak obie wycofane
     //@Async - metoda jest asychroniczna czyli bedzie działać w tle w osobnym wątku i nie blokować aplikacji
-
+    /*
     @PostConstruct
     @Transactional
     @Async
@@ -72,6 +72,7 @@ public class BasketballApiServices {
         getAndSaveGames(league, season, todayDate).subscribe();
         getAndSaveGames(league, season, tomorowDate).subscribe();
     }
+     */
 
 
 
@@ -221,7 +222,7 @@ public class BasketballApiServices {
 
      //losowanie odds
      private BigDecimal generateOdds(){
-        return BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(1.01, 5))
+        return BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(1.14, 5.50))
                 .setScale(2, RoundingMode.HALF_UP);
      }
      private BigDecimal generateDrawOdds(BigDecimal odds1, BigDecimal odds2){
