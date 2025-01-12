@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", function () {
     //funkcjonalnośc do pobierania i wyswietlania meczy z danej kategorii
     initializeDynamicEventLoading();
 
+    // Inicjalizacja funkcjonalności koszyka
+    updateBasketSummary();
 });
 
 /**
@@ -62,19 +64,6 @@ function initializeAccordion() {
                 updateActiveLink(accordion, event.target);
             }
         });
-
-        // // Automatically expand the first accordion item
-        // const firstAccordionButton = accordion.querySelector(".accordion-item:first-child .accordion-button");
-        // const firstAccordionBody = accordion.querySelector(".accordion-item:first-child .accordion-body");
-        // if (firstAccordionButton) {
-        //     firstAccordionButton.click();
-        // }
-        // if (firstAccordionBody) {
-        //     const firstAllLink = firstAccordionBody.querySelector("a:first-child");
-        //     if (firstAllLink) {
-        //         firstAllLink.click();
-        //     }
-        // }
     });
 
 
@@ -184,9 +173,83 @@ function initializeAddToBasketButtons() {
                 } else if (comboBtn.classList.contains('active')) {
                     comboBasketBody.removeChild(basketItem);
                 }
+                updateBasketSummary();
             });
+
+            if (singleBtn.classList.contains('active')) {
+                const stakeInput = basketItem.querySelector('.stake-single');
+                if (stakeInput) {
+                    stakeInput.addEventListener('input', () => {
+                        const stake = parseFloat(stakeInput.value) || 0;
+                        if (stake < 0) {
+                            stakeInput.value = 0;
+                        }
+
+                        updateBasketSummary();
+                    });
+                }
+            }
+            else if (comboBtn.classList.contains('active')) {
+                const stakeCombo = document.querySelector('#combo-summary .stake-combo');
+                stakeCombo.addEventListener('input', () => {
+                    const stake = parseFloat(stakeCombo.value) || 0;
+                    if (stake < 0) {
+                        stakeCombo.value = 0;
+                    }
+
+                    updateBasketSummary();
+                });
+            }
+
+            updateBasketSummary();
         });
     });
+}
+
+/**
+ * Funkcja aktualizująca koszyk
+ */
+function updateBasketSummary() {
+    const singleBasketItems = document.querySelectorAll('#single-section .basket-item');
+    const singleTotalStake = document.querySelector('#single-summary #single-total-stake');
+    const singlePotentialWin = document.querySelector('#single-summary #single-potential-win');
+
+    const comboBasketItems = document.querySelectorAll('#combo-section .basket-item');
+    const stakeCombo = document.querySelector('#combo-summary .stake-combo');
+    const comboTotalOdds = document.querySelector('#combo-summary #combo-total-odds');
+    const comboPotentialWin = document.querySelector('#combo-summary #combo-potential-win');
+
+    let singleTotal = 0;
+    let singleWin = 0;
+    singleBasketItems.forEach(item => {
+        const stakeInput = item.querySelector('.stake-single');
+        const odds = parseFloat(item.querySelector('.event-odds').innerText);
+        const stake = parseFloat(stakeInput.value) || 0;
+        const winValue = stake * odds * 0.88;
+
+        singleTotal += stake;
+        singleWin += winValue;
+
+        item.querySelector('.win-single-value').innerText = winValue.toFixed(2);
+    });
+
+    singleTotalStake.innerText = singleTotal.toFixed(2);
+    singlePotentialWin.innerText = singleWin.toFixed(2);
+
+    let comboOdds = 0.00;
+    if (comboBasketItems.length > 0) {
+        comboOdds = 1.00;
+    }
+
+    comboBasketItems.forEach(item => {
+        const odds = parseFloat(item.querySelector('.event-odds').innerText);
+        comboOdds *= odds;
+    });
+
+    let comboTotal = parseFloat(stakeCombo.value) || 0;
+    comboTotalOdds.innerText = comboOdds.toFixed(2);
+    comboPotentialWin.innerText = (comboTotal * 0.88 * comboOdds).toFixed(2);
+
 }
 
 /**
@@ -259,16 +322,3 @@ function initializeDynamicEventLoading(){
         firstSubcategoryLink.click(); // Wybiera pierwszą podkategorię
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
