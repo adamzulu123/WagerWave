@@ -45,6 +45,7 @@ function initializeBetButtons() {
 function initializeAccordion() {
     const accordions = document.querySelectorAll(".accordion");
 
+
     accordions.forEach((accordion) => {
         accordion.addEventListener("show.bs.collapse", (event) => {
             const accordionBody = event.target.querySelector(".accordion-body");
@@ -61,7 +62,22 @@ function initializeAccordion() {
                 updateActiveLink(accordion, event.target);
             }
         });
+
+        // // Automatically expand the first accordion item
+        // const firstAccordionButton = accordion.querySelector(".accordion-item:first-child .accordion-button");
+        // const firstAccordionBody = accordion.querySelector(".accordion-item:first-child .accordion-body");
+        // if (firstAccordionButton) {
+        //     firstAccordionButton.click();
+        // }
+        // if (firstAccordionBody) {
+        //     const firstAllLink = firstAccordionBody.querySelector("a:first-child");
+        //     if (firstAllLink) {
+        //         firstAllLink.click();
+        //     }
+        // }
     });
+
+
 }
 
 /**
@@ -107,7 +123,7 @@ function initializeAddToBasketButtons() {
             console.log(betResult);
 
             let betTeam = '';
-            if (betResult == 'X') {
+            if (betResult === 'X') {
                 betTeam = 'Draw';
             }
             else if (betResult === '1') {
@@ -199,10 +215,11 @@ function initializeDynamicEventLoading(){
 
                     if (events && events.length > 0) {
                         events.forEach(event => {
+                            const eventTime = event.eventStartTime.replace('T', ' ').slice(0, 16);
                             const eventHtml = `
                                 <div class="event-box rounded">
                                     <div class="event-header d-flex justify-content-between">
-                                        <span class="event-date-time">${event.eventStartTime}</span>
+                                        <span class="event-date-time">${eventTime}</span>
                                         <span class="event-name">${event.eventName}</span>
                                     </div>
                                     <div class="event-teams d-flex justify-content-between my-2">
@@ -232,6 +249,15 @@ function initializeDynamicEventLoading(){
         });
     });
 
+    const firstCategoryButton = document.querySelector('.accordion-item:first-child .accordion-button');
+    const firstSubcategoryLink = document.querySelector('.accordion-item:first-child .categories-box a:first-child');
+
+    if (firstCategoryButton) {
+        firstCategoryButton.click(); // Rozwija pierwszą kategorię
+    }
+    if (firstSubcategoryLink) {
+        firstSubcategoryLink.click(); // Wybiera pierwszą podkategorię
+    }
 }
 
 
