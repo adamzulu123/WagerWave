@@ -122,4 +122,13 @@ public class WalletService {
         walletRepository.delete(wallet);
     }
 
+    @Transactional
+    public void placeBetWithYourFunds(MyUser user, BigDecimal amount) {
+        //pobieramy pobieramy kase z portfela przy stawianiu zakładów
+        Wallet wallet = getWalletForUser(user);
+        wallet.setBalance(wallet.getBalance().subtract(amount));
+        walletRepository.save(wallet);
+    }
+
+
 }

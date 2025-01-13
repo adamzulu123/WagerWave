@@ -13,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +21,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 /*
 @Configuration - oznacza, że tak klasa to źrodlo definicji beanów oraz oznacza ze za pomoca
 tej klasy będa odbywała configuracja springsecurity.
@@ -53,6 +57,22 @@ public class SecurityConfig {
 
 
     @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+
+
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
             /*
@@ -80,7 +100,6 @@ public class SecurityConfig {
         //on domyślnie usuwa sesje uzytkownika - czysci dane sesji i kontekst bezpieczeństwa
 
 
-
         return http
                 .authorizeHttpRequests(authorizeRequests ->{
                     authorizeRequests.requestMatchers("/registration", "/register","/images/**", "/css/**","/js/**", "/forgot-password").permitAll();
@@ -101,7 +120,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .maximumSessions(-1)  //-1 brak limitu ilości sesji
                 )
-
+                .csrf(AbstractHttpConfigurer::disable)
                 .build(); //utworzenie i zwrocenie obiektu
     }
 }

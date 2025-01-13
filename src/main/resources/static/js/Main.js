@@ -372,7 +372,7 @@ function sendBetsDetailsToBackend() {
         //dane do pojedynczych zakładów
         const singleBasketItems = document.querySelectorAll('#single-section .basket-item');
         singleBasketItems.forEach(item => {
-            const eventID = item.getAttribute('data-event-id');
+            const eventID = parseInt(item.getAttribute('data-event-id'));
             const odds = parseFloat(item.querySelector('.event-odds').innerText);
             const stake = parseFloat(item.querySelector('.stake-single').value);
             const potentialWin = parseFloat(item.querySelector('.win-single-value').innerText);
@@ -407,14 +407,21 @@ function sendBetsDetailsToBackend() {
         const totalOdds = parseFloat(comboTotalOdds.innerText) || 0;
         const potentialWin = parseFloat(comboPotentialWin.innerText) || 0;
 
+        let maxEndTime = null; //najpizniejze betEndTime to bedzie endTime naszego kuponu całego
+
         comboBasketItems.forEach(item => {
             //solo-bets info do kuponu
-            const eventID = item.getAttribute('data-event-id');
+            const eventID = parseInt(item.getAttribute('data-event-id'));
             const betEndTime = item.getAttribute('data-event-end-time');
             const odds = parseFloat(item.querySelector('.event-odds').innerText);
             const betTeam = item.querySelector('.bet-team').innerText;
             const betType = betTeam === 'Draw' ? 'DRAW' :
                 (betTeam === item.querySelector('.bet-team').innerText ? 'TEAM_1' : 'TEAM_2');
+
+            //aktualizujemy jak betTime jest wiekszy niz maxEndtime
+            if (!maxEndTime || new Date(betEndTime) > new Date(maxEndTime)) {
+                maxEndTime = betEndTime;
+            }
 
             betsData.bets.push({
                 eventID,
@@ -430,6 +437,7 @@ function sendBetsDetailsToBackend() {
             odds: totalOdds,
             stake: stake,
             potentialWin,
+            endTime: maxEndTime,
         });
 
     }
@@ -437,10 +445,31 @@ function sendBetsDetailsToBackend() {
 
 
     //wysyłanie danych do backend
-    //fetch('appAPI/placeBets, {})
-
-
-
+    fetch(`bets/place`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(betsData),
+        credentials: 'same-origin', // Ważne: dodaj to, aby ciasteczka były przesyłane
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error); // Wyrzucamy błąd z odpowiedzi
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Zakłady wysłane pomyślnie:', data);
+            alert('Bets have been accepted!');
+        })
+        .catch(error => {
+            console.error('Błąd:', error);
+            alert('Error: : ' + error.message);
+        });
 }
 
 
