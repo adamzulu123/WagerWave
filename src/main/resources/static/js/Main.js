@@ -293,32 +293,51 @@ function validateBasket() {
     const summaryButton = document.getElementById('summary-button');
 
     let isValid = true;
+    let isError = false;
     let message = 'Place a bet';
 
     if (singleBtn.classList.contains('active')) {
         const singleBasketItems = document.querySelectorAll('#single-section .basket-item');
         if (singleBasketItems.length === 0) {
             isValid = false;
+            isError = false;
             message = "Add a bet";
         } else {
-            singleBasketItems.forEach(item => {
+            for (let i = 0; i < singleBasketItems.length; i++) {
+                const item = singleBasketItems[i];
+                const odds = parseFloat(item.querySelector('.event-odds').innerText);
                 const stakeInput = item.querySelector('.stake-single');
                 const stake = parseFloat(stakeInput.value) || 0;
-                if (stake <= 0) {
+                if (odds < 1.14) {
                     isValid = false;
+                    isError = true;
+                    message = "Minimum odds is 1.14!";
+                    break;
+                } else if (stake <= 0) {
+                    isValid = false;
+                    isError = false;
                     message = "Provide a stake";
                 }
-            });
+            }
         }
     } else if (comboBtn.classList.contains('active')) {
         const comboBasketItems = document.querySelectorAll('#combo-section .basket-item');
+        const odds = document.querySelector('#combo-summary #combo-total-odds').innerText;
         const stakeCombo = document.querySelector('#combo-summary .stake-combo');
         const stake = parseFloat(stakeCombo.value) || 0;
         if (comboBasketItems.length === 0) {
             isValid = false;
+            isError = false;
             message = "Add a bet";
-        } else if (stake <= 0) {
+        }
+        else if (odds < 1.14) {
             isValid = false;
+            isError = true;
+            message = "Minimum odds is 1.14!";
+        }
+        else if (stake <= 0) {
+            isValid = false;
+            isError = false;
             message = "Provide a stake";
         }
     }
@@ -329,8 +348,11 @@ function validateBasket() {
         summaryButton.innerText = "Place a bet";
     } else {
         summaryButton.disabled = true;
-        summaryButton.classList.add('btn-error');
         summaryButton.innerText = message;
+        summaryButton.classList.remove('btn-error');
+        if (isError) {
+            summaryButton.classList.add('btn-error');
+        }
     }
 }
 
@@ -351,7 +373,11 @@ function initializePlaceBetsButton() {
         return;
     }
     summaryBtn.addEventListener('click', () => {
-        sendBetsDetailsToBackend();
+        if (summaryBtn.innerText === 'Place a bet') {
+            summaryBtn.innerText = 'Confirm';
+        } else if (summaryBtn.innerText === 'Confirm') {
+            sendBetsDetailsToBackend();
+        }
     });
 }
 /**

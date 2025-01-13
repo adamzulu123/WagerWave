@@ -459,6 +459,17 @@ body {
     font-weight: bold;
 }
 
+#summary-button:disabled {
+    background-color: #555;
+    color: white;
+    border: none;
+}
+
+#summary-button.btn-error:disabled {
+    box-sizing: border-box;
+    border: 1px solid red;
+}
+
 #summary-button:hover {
     color: yellow;
     border: 1px solid black;
