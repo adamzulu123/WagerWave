@@ -69,6 +69,7 @@ public class BetsController {
         }
         return ResponseEntity.badRequest().body(Map.of("error", "Invalid user"));
     }
+
 }
 
 

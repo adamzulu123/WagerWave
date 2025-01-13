@@ -72,8 +72,7 @@ public class BasketballApiServices {
         getAndSaveGames(league, season, todayDate).subscribe();
         getAndSaveGames(league, season, tomorowDate).subscribe();
     }
-     */
-
+    */
 
 
     @Scheduled(initialDelay = 1800000, fixedRate = 3600000) // Po 30 minutach, a potem co godzinę

@@ -3,6 +3,7 @@ package com.ww.WagerWave.Services;
 
 import com.ww.WagerWave.Model.*;
 import com.ww.WagerWave.Repository.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.core.Local;
@@ -24,7 +25,7 @@ public class BetsServices {
     private CouponRepository couponRepository;
     private WalletService walletService;
 
-
+    @Transactional
     public Optional<String> processSingleBets(BetRequest betRequest, MyUser user) {
 
         //pobieramy info o kwocie całej tych pojedynczych zakładów co chcemy obstawic
@@ -68,6 +69,7 @@ public class BetsServices {
         return Optional.empty();
     }
 
+    @Transactional
     public Optional<String> processComboBets(BetRequest betRequest, MyUser user) {
         //log.info();
         BetRequest.CouponData couponData = betRequest.getCouponData();

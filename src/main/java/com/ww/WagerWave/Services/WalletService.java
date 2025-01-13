@@ -122,11 +122,20 @@ public class WalletService {
         walletRepository.delete(wallet);
     }
 
+    //usuwanie funduszy po dodaniu bet nowego
     @Transactional
     public void placeBetWithYourFunds(MyUser user, BigDecimal amount) {
         //pobieramy pobieramy kase z portfela przy stawianiu zakładów
         Wallet wallet = getWalletForUser(user);
         wallet.setBalance(wallet.getBalance().subtract(amount));
+        walletRepository.save(wallet);
+    }
+
+    //updatowanie porfela po wygranej
+    @Transactional
+    public void updateFundsAfterWin(MyUser user, BigDecimal amount) {
+        Wallet wallet = getWalletForUser(user);
+        wallet.setBalance(wallet.getBalance().add(amount));
         walletRepository.save(wallet);
     }
 
