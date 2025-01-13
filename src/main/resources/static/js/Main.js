@@ -20,7 +20,37 @@ document.addEventListener("DOMContentLoaded", function () {
     //inicjalizacja przycisku do stawiania kuponu
     initializePlaceBetsButton();
 
+    // Inicjalizacja event listenera dla stakeCombo
+    initializeStakeComboListener();
 });
+
+
+/**
+ * Funkcja dodająca event listener do elementu stakeInput
+ * @param {HTMLInputElement} stakeInput - Element input, do którego dodajemy listener
+ */
+function addStakeInputListener(stakeInput) {
+    stakeInput.addEventListener('input', () => {
+        const stake = parseFloat(stakeInput.value) || 0;
+        if (stake < 0) {
+            stakeInput.value = 0;
+        } else if (stakeInput.value.split('.')[1]?.length > 2) {
+            stakeInput.value = stake.toFixed(2);
+        }
+
+        updateBasketSummary();
+    });
+}
+
+/**
+ * Funkcja inicjalizujaca StakeComboListener
+ */
+function initializeStakeComboListener() {
+    const stakeCombo = document.querySelector('#combo-summary .stake-combo');
+    if (stakeCombo) {
+        addStakeInputListener(stakeCombo);
+    }
+}
 
 /**
  * Funkcja obsługująca przełączanie między sekcjami "Pojedynczo" i "Kupon"
@@ -169,7 +199,7 @@ function initializeAddToBasketButtons() {
                     </div>
                 </div>
                 <div class="item-stake">
-                    <input type="number" class="stake-single form-control form-control-sm" min=0 placeholder="Stake (PLN)">
+                    <input type="number" min="0" step="0.01" class="stake-single form-control form-control-sm" placeholder="Stake (PLN)">
                     <span class="win-single">
                         <span class="win-single-text">Potential win:</span><br>
                         <span class="win-single-value">0,00</span> PLN
@@ -209,26 +239,12 @@ function initializeAddToBasketButtons() {
             if (singleBtn.classList.contains('active')) {
                 const stakeInput = basketItem.querySelector('.stake-single');
                 if (stakeInput) {
-                    stakeInput.addEventListener('input', () => {
-                        const stake = parseFloat(stakeInput.value) || 0;
-                        if (stake < 0) {
-                            stakeInput.value = 0;
-                        }
-
-                        updateBasketSummary();
-                    });
+                    addStakeInputListener(stakeInput);
                 }
             }
             else if (comboBtn.classList.contains('active')) {
                 const stakeCombo = document.querySelector('#combo-summary .stake-combo');
-                stakeCombo.addEventListener('input', () => {
-                    const stake = parseFloat(stakeCombo.value) || 0;
-                    if (stake < 0) {
-                        stakeCombo.value = 0;
-                    }
-
-                    updateBasketSummary();
-                });
+                addStakeInputListener(stakeCombo);
             }
 
             updateBasketSummary();
@@ -292,6 +308,7 @@ function updateBasketSummary() {
         });
 
         let comboTotal = parseFloat(stakeCombo.value) || 0;
+        comboTotal = comboTotal.toFixed(2);
         comboTotalOdds.innerText = comboOdds.toFixed(2);
         comboPotentialWin.innerText = (comboTotal * 0.88 * comboOdds).toFixed(2);
     }
@@ -304,6 +321,7 @@ function validateBasket() {
     const singleBtn = document.getElementById('single-btn');
     const comboBtn = document.getElementById('combo-btn');
     const summaryButton = document.getElementById('summary-button');
+    const walletBalance = parseFloat(document.querySelector('#wallet-balance').innerText);
 
     let isValid = true;
     let isError = false;
@@ -311,6 +329,9 @@ function validateBasket() {
 
     if (singleBtn.classList.contains('active')) {
         const singleBasketItems = document.querySelectorAll('#single-section .basket-item');
+        const singleTotalStake = parseFloat(document.querySelector('#single-summary #single-total-stake').innerText);
+        const eventResults = new Set();
+
         if (singleBasketItems.length === 0) {
             isValid = false;
             isError = false;
@@ -318,40 +339,93 @@ function validateBasket() {
         } else {
             for (let i = 0; i < singleBasketItems.length; i++) {
                 const item = singleBasketItems[i];
+                const eventID = item.getAttribute('data-event-id');
+                const betTeam = item.querySelector('.bet-team').innerText;
                 const odds = parseFloat(item.querySelector('.event-odds').innerText);
-                const stakeInput = item.querySelector('.stake-single');
-                const stake = parseFloat(stakeInput.value) || 0;
+
+                if (eventResults.has(`${eventID}-${betTeam}`)) {
+                    isValid = false;
+                    isError = true;
+                    message = "Duplicate bet!";
+                    break;
+                } else {
+                    eventResults.add(`${eventID}-${betTeam}`);
+                }
+
                 if (odds < 1.14) {
                     isValid = false;
                     isError = true;
                     message = "Minimum odds is 1.14!";
                     break;
-                } else if (stake <= 0) {
-                    isValid = false;
-                    isError = false;
-                    message = "Provide a stake";
+                }
+            }
+
+            if (isValid && singleTotalStake > walletBalance) {
+                isValid = false;
+                isError = true;
+                message = "Not enough money!";
+            }
+
+            if (isValid) {
+                for (let i = 0; i < singleBasketItems.length; i++) {
+                    const item = singleBasketItems[i];
+                    const stakeInput = item.querySelector('.stake-single');
+                    let stake = parseFloat(stakeInput.value) || 0;
+                    stake = stake.toFixed(2);
+
+                    if (stake <= 0) {
+                        isValid = false;
+                        isError = false;
+                        message = "Provide a stake";
+                        break;
+                    }
                 }
             }
         }
     } else if (comboBtn.classList.contains('active')) {
         const comboBasketItems = document.querySelectorAll('#combo-section .basket-item');
-        const odds = document.querySelector('#combo-summary #combo-total-odds').innerText;
+        const eventIDs = new Set();
+        const odds = parseFloat(document.querySelector('#combo-summary #combo-total-odds').innerText);
         const stakeCombo = document.querySelector('#combo-summary .stake-combo');
-        const stake = parseFloat(stakeCombo.value) || 0;
+        let stake = parseFloat(stakeCombo.value) || 0;
+        stake = stake.toFixed(2);
+
         if (comboBasketItems.length === 0) {
             isValid = false;
             isError = false;
             message = "Add a bet";
-        }
-        else if (odds < 1.14) {
-            isValid = false;
-            isError = true;
-            message = "Minimum odds is 1.14!";
-        }
-        else if (stake <= 0) {
+        } else if (comboBasketItems.length === 1) {
             isValid = false;
             isError = false;
-            message = "Provide a stake";
+            message = "Add a second bet";
+        } else {
+            for (let i = 0; i < comboBasketItems.length; i++) {
+                const item = comboBasketItems[i];
+                const eventID = item.getAttribute('data-event-id');
+
+                if (eventIDs.has(eventID)) {
+                    isValid = false;
+                    isError = true;
+                    message = "Conflicting bets!";
+                    break;
+                } else {
+                    eventIDs.add(eventID);
+                }
+            }
+
+            if (isValid && odds < 1.14) {
+                isValid = false;
+                isError = true;
+                message = "Minimum odds is 1.14!";
+            } else if (isValid && stake > walletBalance) {
+                isValid = false;
+                isError = true;
+                message = "Not enough money!";
+            } else if (isValid && stake <= 0) {
+                isValid = false;
+                isError = false;
+                message = "Provide a stake";
+            }
         }
     }
 
@@ -390,7 +464,6 @@ function initializePlaceBetsButton() {
             summaryBtn.innerText = 'Confirm';
         } else if (summaryBtn.innerText === 'Confirm') {
             sendBetsDetailsToBackend();
-
         }
     });
 }
@@ -401,9 +474,11 @@ function sendBetsDetailsToBackend() {
     const singleBtn = document.getElementById('single-btn');
     const comboBtn = document.getElementById('combo-btn');
     const summaryBtn = document.getElementById('summary-button');
+    const walletBalance = document.getElementById('wallet-balance');
 
     summaryBtn.disabled = true;
     summaryBtn.innerText = 'Placing a bet...';
+    let newWalletBalance = parseFloat(walletBalance.innerText);
 
     const betsData = {
         type: singleBtn.classList.contains('active') ? 'SINGLE' : 'COMBO',
@@ -435,6 +510,8 @@ function sendBetsDetailsToBackend() {
                 potentialWin,
                 betEndTime,
             });
+
+            newWalletBalance -= stake;
         });
     }
     /*
@@ -484,6 +561,8 @@ function sendBetsDetailsToBackend() {
             endTime: maxEndTime,
         });
 
+        newWalletBalance -= stake;
+
     }
     console.log('Dane zakładów:', betsData);
 
@@ -512,7 +591,8 @@ function sendBetsDetailsToBackend() {
         })
         .then(data => {
             //console.log('Zakłady wysłane pomyślnie:', data);
-            alert('Bets have been accepted!');
+            // alert('Bets have been accepted!');
+            walletBalance.innerText = newWalletBalance.toFixed(2);
             clearBasket();
         })
         .catch(error => {

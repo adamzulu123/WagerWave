@@ -34,7 +34,7 @@
                     <li class="nav-item" id="wallet">
                         <a class="nav-link" th:href="@{/Account#wallet}">
                             <img src="../images/Wallet.png" alt="wallet">
-                            <span th:text="${wallet.balance} + ' PLN'">0,00 PLN</span>
+                            <span id='wallet-balance' th:text="${wallet.balance}">0,00</span><span> PLN</span>
                         </a>
                     </li>
                     <li class="nav-item dropdown">
@@ -216,7 +216,7 @@
 
                         <div id="combo-summary" class="d-none">
                             <span class="d-flex justify-content-between mb-3">
-                                <input type="number" class="stake-combo form-control form-control-sm" min=0 placeholder="Stake (PLN)">
+                                <input type="number" min="0" step="0.01" class="stake-combo form-control form-control-sm" placeholder="Stake (PLN)">
                                 <span id="combo-total-odds">0,00</span>
                             </span>
                             <p>Potential win: <span id="combo-potential-win">0,00</span> PLN</p>
