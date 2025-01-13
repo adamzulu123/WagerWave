@@ -24,6 +24,25 @@ public class BetsController {
     private BetsServices betsServices;
     private UserServices userServices;
 
+    /*
+    ResponseEntity jest używane do zwracania to reprezentowania odpowiedzi HTTP serwera.
+    W tym status (200 -OK, 400-BadRequest), nagłowke i odpowiedź.
+    czyli np:
+     ResponseEntity.ok().body(Map.of("message", "Bets placed successfully"))); :
+            *ResponseEntity.ok() === status odpowidzi na 200
+            *body() ==== komunikat w formacie JSON:
+                {
+                    "message": "Bets placed successfully"
+                }
+                dzieje się tak bo spring korzysta z: HttpMessageConverter (domyślnie)
+                    wiec automatycznie serializuje obiekt Map do formatu JSON, bo
+                    w nagłówkach odpowiedzi ustawione jest Accept: application/json
+
+                    bo: (w naszym przypadku oczywiście)
+                        Content-Type mówi serwerowi, że wysyłane dane są w formacie JSON.
+                        Accept mówi serwerowi, że oczekujesz odpowiedzi w formacie JSON.
+     */
+
     @PostMapping("/place")
     public ResponseEntity<Map<String, String>> placeBets (@RequestBody BetRequest betRequest, Principal principal) {
 

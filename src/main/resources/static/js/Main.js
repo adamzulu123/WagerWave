@@ -443,6 +443,10 @@ function sendBetsDetailsToBackend() {
     }
     console.log('Dane zakładów:', betsData);
 
+    /*
+    Content-Type mówi serwerowi, że wysyłane dane są w formacie JSON.
+    Accept mówi serwerowi, że oczekujesz odpowiedzi w formacie JSON.
+     */
 
     //wysyłanie danych do backend
     fetch(`bets/place`, {
@@ -452,18 +456,18 @@ function sendBetsDetailsToBackend() {
             'Accept': 'application/json',
         },
         body: JSON.stringify(betsData),
-        credentials: 'same-origin', // Ważne: dodaj to, aby ciasteczka były przesyłane
+        credentials: 'same-origin', //ciasteczka maja zostac przesłane
     })
         .then(response => {
             if (!response.ok) {
                 return response.json().then(errorData => {
-                    throw new Error(errorData.error); // Wyrzucamy błąd z odpowiedzi
+                    throw new Error(errorData.error);
                 });
             }
             return response.json();
         })
         .then(data => {
-            console.log('Zakłady wysłane pomyślnie:', data);
+            //console.log('Zakłady wysłane pomyślnie:', data);
             alert('Bets have been accepted!');
         })
         .catch(error => {
