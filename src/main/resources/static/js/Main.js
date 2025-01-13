@@ -102,6 +102,19 @@ function updateActiveLink(accordion, activeLink) {
 }
 
 /**
+ * Funkcja czyszcząca koszyk
+ */
+function clearBasket() {
+    const singleBasketBody = document.querySelector('#single-section .basket-items');
+    const comboBasketBody = document.querySelector('#combo-section .basket-items');
+    const stakeCombo = document.querySelector('#combo-summary .stake-combo');
+    singleBasketBody.innerHTML = '';
+    comboBasketBody.innerHTML = '';
+    stakeCombo.value = '';
+    updateBasketSummary();
+}
+
+/**
  * Funkcja inicjalizująca przyciski dodawania do koszyka
  */
 function initializeAddToBasketButtons() {
@@ -377,6 +390,7 @@ function initializePlaceBetsButton() {
             summaryBtn.innerText = 'Confirm';
         } else if (summaryBtn.innerText === 'Confirm') {
             sendBetsDetailsToBackend();
+
         }
     });
 }
@@ -386,6 +400,10 @@ function initializePlaceBetsButton() {
 function sendBetsDetailsToBackend() {
     const singleBtn = document.getElementById('single-btn');
     const comboBtn = document.getElementById('combo-btn');
+    const summaryBtn = document.getElementById('summary-button');
+
+    summaryBtn.disabled = true;
+    summaryBtn.innerText = 'Placing a bet...';
 
     const betsData = {
         type: singleBtn.classList.contains('active') ? 'SINGLE' : 'COMBO',
@@ -495,6 +513,7 @@ function sendBetsDetailsToBackend() {
         .then(data => {
             //console.log('Zakłady wysłane pomyślnie:', data);
             alert('Bets have been accepted!');
+            clearBasket();
         })
         .catch(error => {
             console.error('Błąd:', error);
