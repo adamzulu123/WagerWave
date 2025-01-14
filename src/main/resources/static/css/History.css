@@ -1,0 +1,312 @@
+/*
+ =======================================================
+  GŁÓWNY UKŁAD STRONY
+ =======================================================
+*/
+html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #023d54 0%, #2e8b57 40%, #ffff66 100%);
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+.main-container {
+    flex: 1;
+    margin-top: 86px; /* by nie chowało się za fixed navbar */
+    margin-bottom: 30px;
+    max-width: 1200px;
+}
+
+/*
+ =======================================================
+  NAWIGACJA (NAVBAR)
+ =======================================================
+*/
+.navbar {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 10;
+    background-color: #1b7843;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.nav-link,
+.dropdown-item {
+    font-size: 0.95rem;
+    transition: color 0.3s;
+}
+
+.nav-link:hover,
+.dropdown-item:hover {
+    color: #ffff66 !important; /* akcent przy hoverze */
+}
+
+/* Dodane/uzupełnione, by uniknąć zmiany tła na kolor czcionki */
+.dropdown-menu .dropdown-item:hover {
+    background-color: #145f31; /* lub inny odcień zieleni */
+    color: #ffff66 !important;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-size: 1.2rem;
+}
+
+.icon-img {
+    height: 24px;
+}
+
+.dropdown-menu {
+    background-color: #1b7843;
+}
+
+.dropdown-menu .dropdown-divider {
+    border-color: #fff;
+}
+
+.dropdown-menu .dropdown-item {
+    color: #fff;
+    font-weight: 500;
+}
+
+/*
+ =======================================================
+  FILTR (sekcja "FILTR: WSZYSTKIE / WYGRANE / PRZEGRANE")
+ =======================================================
+*/
+.filter-section {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+}
+
+.filter-section h4 {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.filter-options {
+    display: flex;
+    gap: 15px;
+}
+
+.filter-options .filter-option {
+    cursor: pointer;
+    transition: transform 0.3s, color 0.3s;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.filter-options .filter-option:hover {
+    transform: scale(1.08);
+    color: #ffff66;
+}
+
+.filter-options .active-filter {
+    text-decoration: underline;
+    font-weight: 600;
+    color: #ffff66;
+}
+
+/*
+ =======================================================
+  KONTENER HISTORII ZAKŁADÓW
+ =======================================================
+*/
+.bets-history-container {
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 10px;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.bets-history-container h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.bets-history-container p {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+/*
+ =======================================================
+  POJEDYNCZY ZAKŁAD (bet-item)
+ =======================================================
+*/
+.bet-item {
+    display: flex;
+    align-items: flex-start;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 10px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+}
+
+.bet-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+/* Pasek boczny kolorujący się w zależności od wyniku zakładu */
+.won-bet {
+    border-left: 5px solid #2e8b57;
+}
+.lost-bet {
+    border-left: 5px solid #e74c3c;
+}
+
+/* Ikonka check / cross */
+.bet-status-icon {
+    width: 34px;
+    height: 34px;
+    margin-right: 15px;
+    align-self: center;
+    transition: transform 0.2s;
+}
+.bet-status-icon:hover {
+    transform: scale(1.1);
+}
+
+.bet-details h5 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 600;
+}
+
+.bet-details p {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: #555;
+    line-height: 1.3;
+}
+
+.won {
+    color: #2e8b57;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+.lost {
+    color: #e74c3c;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+/*
+ =======================================================
+  STOPKA (BILANS + PRZYCISK PDF)
+ =======================================================
+*/
+.history-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0 0 0;
+    color: #fff;
+    padding: 0 10px;
+}
+
+.balance-summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.balance-summary .balance-label {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.balance-summary .negative-balance {
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* Przycisk PDF */
+.download-report .pdf-button {
+    background: #1b7843;
+    color: #fff;
+    border: 1px solid black;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, transform 0.2s;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+}
+
+.download-report .pdf-button:hover {
+    background: #ffff66;
+    color: #023d54;
+    transform: scale(1.03);
+}
+
+/*
+ =======================================================
+  RESPONSYWNOŚĆ
+ =======================================================
+*/
+@media (max-width: 768px) {
+    .filter-section {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .main-container {
+        margin-top: 100px;
+        padding: 0 15px;
+    }
+
+    .bets-history-container {
+        padding: 15px;
+    }
+
+    .bet-details h5 {
+        font-size: 0.95rem;
+    }
+
+    .bet-details p {
+        font-size: 0.85rem;
+    }
+
+    .history-footer {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .download-report .pdf-button {
+        width: 100%;
+        max-width: 260px;
+    }
+}
