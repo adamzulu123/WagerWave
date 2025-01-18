@@ -23,7 +23,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <!-- Lewa część menu -->
                 <ul class="navbar-nav">
-                    <li class="nav-item active" id="bets">
+                    <li class="nav-item" id="bets">
                         <a class="nav-link" th:href="@{/Main}">Bets</a>
                     </li>
                     <li class="nav-item">
@@ -33,7 +33,7 @@
 
                 <!-- Prawa część menu (kwota i imię) -->
                 <ul class="navbar-nav ms-auto"> <!-- Dodano ms-auto do wypozycjonowania po prawej stronie -->
-                    <li class="nav-item" id="wallet_balance">
+                    <li class="nav-item active" id="wallet_balance">
                         <a class="nav-link"  href="#wallet">
                             <img src="../images/Wallet.png" alt="wallet">
                             <span id='wallet-balance' th:text="${wallet.balance}">0,00</span><span> PLN</span>
