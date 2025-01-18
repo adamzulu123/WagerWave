@@ -9,8 +9,17 @@
 </head>
 <body>
 
+<!-- Navbar -->
+<nav class="navbar navbar-expand-md navbar-dark">
+    <div class="container-fluid">
+        <div class="navbar-center">
+            <span class="navbar-title">WagerWave</span>
+        </div>
+    </div>
+</nav>
+
 <!-- NIby nie widzi obiektu user a jednak działa nwm jak xd -->
-<div class="container-fluid" id="container">
+<div class="container-fluid cont-fluid" id="container">
     <div class="sign-up">
         <!-- Formularz rejestracji -->
         <form th:action="@{/register}" th:object="${user}" method="POST">

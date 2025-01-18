@@ -1,6 +1,7 @@
 package com.ww.WagerWave.Controller;
 
 import com.ww.WagerWave.Model.Bet;
+import com.ww.WagerWave.Model.Coupon;
 import com.ww.WagerWave.Model.MyUser;
 import com.ww.WagerWave.Model.Wallet;
 import com.ww.WagerWave.Services.BetsServices;
@@ -31,21 +32,24 @@ public class HistoryController {
             return "redirect:/login";
         }
 
-        String userEmail = principal.getName();
-        log.info("Zalogowany użytkownik: {}", userEmail);
-
         Optional<MyUser> userOptional = userServices.findByEmail(principal.getName());
 
         userOptional.ifPresent(user -> {
             model.addAttribute("user", user);
             Wallet wallet = walletService.getWalletForUser(user);
             model.addAttribute("wallet", wallet);
+
+            /*
+            List<Bet> bets = betsServices.getUserBets(user);
+            model.addAttribute("bets", bets);
+
+            List<Coupon> coupons = betsServices.getUserCoupons(user);
+            model.addAttribute("coupons", coupons);
+            */
+
+
         });
 
-//        List<Bet> betsList = betsServices.getBetsByUser(currentUser);
-//        log.info("Pobrano {} zakładów dla użytkownika {}", betsList.size(), userEmail);
-//
-//        model.addAttribute("bets", betsList);
 
         return "History";
     }

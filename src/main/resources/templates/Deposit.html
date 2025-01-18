@@ -44,7 +44,14 @@
     </div>
   </form>
 
-    <!-- Confirmation Message -->
+  <!-- Return to Home Page Button -->
+  <div class="mt-4" id="returnToAccount">
+    <button type="button" class="btn btn-secondary w-100 return_button" onclick="window.location.href='/Account'">
+        Return to Account Page
+    </button>
+  </div>
+
+  <!-- Confirmation Message -->
     <div class="confirmation-message" th:if="${successMessage}">
       <span th:text="${successMessage}"></span>
     </div>

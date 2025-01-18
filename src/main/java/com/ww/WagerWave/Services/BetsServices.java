@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -118,5 +119,18 @@ public class BetsServices {
         }
         return Optional.empty(); //nic jak nie ma błedu customowego
     }
+
+
+
+    //pobieranie betów i kuponów usera:
+    public List<Bet> getUserBets(MyUser user) {
+        return betsRepository.findAllByUser(user);
+    }
+
+    public List<Coupon> getUserCoupons(MyUser user) {
+        return couponRepository.findAllByUser(user);
+    }
+
+
 }
 
