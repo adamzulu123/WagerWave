@@ -62,12 +62,14 @@ function initializeBetButtons() {
     const comboSection = document.getElementById('combo-section');
     const singleSummary = document.getElementById('single-summary');
     const comboSummary = document.getElementById('combo-summary');
+    const basketHeader = document.querySelector('.basket-header h5');
 
     singleBtn.addEventListener('click', () => {
         toggleSections(singleSection, comboSection);
         toggleSections(singleSummary, comboSummary);
         singleBtn.classList.add('active');
         comboBtn.classList.remove('active');
+        basketHeader.innerText = 'Your bets';
         updateBasketSummary();
     });
 
@@ -76,6 +78,7 @@ function initializeBetButtons() {
         toggleSections(comboSummary, singleSummary);
         singleBtn.classList.remove('active');
         comboBtn.classList.add('active');
+        basketHeader.innerText = 'Your coupon';
         updateBasketSummary();
     });
 }
@@ -169,13 +172,13 @@ function initializeAddToBasketButtons() {
             console.log(betResult);
 
             let betTeam = '';
-            if (betResult === 'X') {
+            if (betResult === 'Draw') {
                 betTeam = 'Draw';
             }
-            else if (betResult === '1') {
+            else if (betResult === 'Team 1') {
                 betTeam = eventBox.querySelector('.event-teams .team-name-1').innerText;
             }
-            else if (betResult === '2') {
+            else if (betResult === 'Team 2') {
                 betTeam = eventBox.querySelector('.event-teams .team-name-2').innerText;
             }
             
@@ -646,9 +649,9 @@ function initializeDynamicEventLoading(){
                                         <span class="team-name-2">${event.team2}</span>
                                     </div>
                                     <div class="event-buttons d-flex justify-content-between">
-                                        <button class="btn btn-outline-primary btn-sm"><span>1</span><br><strong>${event.oddsTeam1}</strong></button>
-                                        <button class="btn btn-outline-primary btn-sm"><span>X</span><br><strong>${event.oddsDraw}</strong></button>
-                                        <button class="btn btn-outline-primary btn-sm"><span>2</span><br><strong>${event.oddsTeam2}</strong></button>
+                                        <button class="btn btn-outline-primary btn-sm"><span>Team 1</span><br><strong>${event.oddsTeam1}</strong></button>
+                                        <button class="btn btn-outline-primary btn-sm"><span>Draw</span><br><strong>${event.oddsDraw}</strong></button>
+                                        <button class="btn btn-outline-primary btn-sm"><span>Team 2</span><br><strong>${event.oddsTeam2}</strong></button>
                                     </div>
                                 </div>`;
                             eventsContainer.innerHTML += eventHtml;
