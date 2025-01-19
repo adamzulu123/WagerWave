@@ -330,6 +330,8 @@ function validateBasket() {
     let isError = false;
     let message = 'Place a bet';
 
+    summaryButton.classList.remove('btn-confirm');
+
     if (singleBtn.classList.contains('active')) {
         const singleBasketItems = document.querySelectorAll('#single-section .basket-item');
         const singleTotalStake = parseFloat(document.querySelector('#single-summary #single-total-stake').innerText);
@@ -465,6 +467,7 @@ function initializePlaceBetsButton() {
     summaryBtn.addEventListener('click', () => {
         if (summaryBtn.innerText === 'Place a bet') {
             summaryBtn.innerText = 'Confirm';
+            summaryBtn.classList.add('btn-confirm');
         } else if (summaryBtn.innerText === 'Confirm') {
             sendBetsDetailsToBackend();
         }
