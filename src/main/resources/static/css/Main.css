@@ -293,6 +293,34 @@ body {
     margin-top: 15px;
 }
 
+.basket-header {
+    position: relative;
+}
+
+.basket-title {
+    text-align: center;
+    width: 100%;
+}
+
+.clear-basket-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 15px;
+    background: none;
+    border: none;
+}
+
+.clear-basket-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.basket-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
 #single-btn, #combo-btn {
     background-color: #1b7843;
     border: 1px solid black;

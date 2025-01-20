@@ -22,6 +22,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Inicjalizacja event listenera dla stakeCombo
     initializeStakeComboListener();
+
+    // Inicjalizacja przycisku do czyszczenia koszyka
+    initializeClearBasketButton();
 });
 
 
@@ -132,6 +135,14 @@ function updateActiveLink(accordion, activeLink) {
         link.classList.remove("active");
     });
     activeLink.classList.add("active");
+}
+
+/**
+ * Funkcja inicjalizująca przycisk do czyszczenia koszyka
+ */
+function initializeClearBasketButton() {
+    const clearBasketButton = document.getElementById('clear-basket-btn');
+    clearBasketButton.addEventListener('click', clearBasket);
 }
 
 /**
