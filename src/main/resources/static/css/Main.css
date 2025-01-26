@@ -519,6 +519,9 @@ footer p {
     margin: 0;
 }
 
+#page-footer {
+    display: none;
+}
 
 /* Media queries */
 @media (max-width: 768px) {
@@ -557,9 +560,14 @@ footer p {
         text-align: center;
     }
 
+    #main {
+        margin-top: 35px;
+    }
+
     .categories-box {
         margin-left: 0;
         margin-right: 0;
+        margin-bottom: 20px;
     }
 
     .accordion-body a {
@@ -568,5 +576,19 @@ footer p {
 
     .events-container {
         margin-top: 15px;
+        max-height: calc(100vh - 110px);
+        overflow-y: auto;
+    }
+
+    .basket-container {
+        margin-top: 35px;
+    }
+
+    #event-footer {
+        display: none;
+    }
+
+    #page-footer {
+        display: block;
     }
 }
