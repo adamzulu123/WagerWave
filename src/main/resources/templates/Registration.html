@@ -18,6 +18,19 @@
     </div>
 </nav>
 
+<!-- Dynamiczne komunikaty -->
+<div class="container-fluid info-fluid">
+    <!-- Komunikat sukcesu -->
+    <div id="successRegisterMessage" th:if="${registrationStatus == 'success'}" class="alert alert-success text-center" role="alert">
+        Registration was successful! You can now log in.
+    </div>
+    <!-- Komunikat błędu -->
+    <div id="errorRegisterMessage" th:if="${registrationStatus == 'failed'}" class="alert alert-danger text-center" role="alert">
+        Registration failed. Please check the errors in the registration section.
+    </div>
+</div>
+
+
 <!-- NIby nie widzi obiektu user a jednak działa nwm jak xd -->
 <div class="container-fluid cont-fluid" id="container">
     <div class="sign-up">

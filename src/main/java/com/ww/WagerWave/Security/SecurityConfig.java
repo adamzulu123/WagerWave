@@ -55,21 +55,28 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /*
+    jest to mechanizm bezpierczeństwa pozwalający na ograrniczenie dostępu do zasobów strony
+    tylko z określonych źródeł - udostępnianie zasobów miedzy domenami
+    czyli jakie domeny mogą uzyskiwać dostęp do zasobów z aplikacji backendowej
 
+    ALE narazie jest to nie używane ponieważ frontend i backend działają na tym samym porcie 8080, gdyby
+    front był na 3000 to było by to niezbędne do tego aby możliwa była komunikacja między nimi.
+    Bo wtedy przeglądarka traktuje front i back jako 2 'różne' źródła.
+     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000");
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
-        configuration.setAllowCredentials(true);
+        configuration.addAllowedMethod("*"); //umożliwiamy POST, GET, PUT, DELETE, itp.
+        configuration.addAllowedHeader("*"); //wszystkie nagłówki http: np. Authorization, Content-Type
+        configuration.setAllowCredentials(true); //zezwalalmy na przekazywanie cookies między serverem a klientem
 
+        //obiekt, który pozwala na rejestrowanie konfiguracji CORS i rejestruje ją dla wszystkich ścieżek
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-
 
 
     @Bean
@@ -120,7 +127,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .maximumSessions(-1)  //-1 brak limitu ilości sesji
                 )
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable) //bez tego POST nie działało!
                 .build(); //utworzenie i zwrocenie obiektu
     }
 }

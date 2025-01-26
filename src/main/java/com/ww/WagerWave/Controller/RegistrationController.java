@@ -88,6 +88,8 @@ public class RegistrationController {
         }
 
         if (result.hasErrors()) {
+            model.addAttribute("user", new MyUser()); //czyszczenie danych w obiekie user
+            model.addAttribute("registrationStatus", "failed");
             return "registration";
         }
 
@@ -108,7 +110,8 @@ public class RegistrationController {
 
         walletRepository.save(defaultWallet);
 
-        return "redirect:/login";
+        model.addAttribute("registrationStatus", "success");
+        return "registration";
     }
 
     //generowanie losowego tymczasowego hasła

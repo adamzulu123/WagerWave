@@ -48,6 +48,18 @@ body h1{
 
 }
 
+.info-fluid{
+    position: relative;
+    max-width: 1000px;
+    border-radius: 20px;
+    border: none;
+}
+/*
+#successMessage, #errorMessage {
+    transition: opacity 1s ease-out;
+}
+*/
+
 .cont-fluid {
     position: relative;
     overflow: hidden;

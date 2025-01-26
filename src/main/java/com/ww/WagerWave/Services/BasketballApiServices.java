@@ -58,7 +58,7 @@ public class BasketballApiServices {
         String league = "12";
         String season = "2024-2025";
         LocalDate today = LocalDate.now();
-        LocalDate tomorow = today.plusDays(1);
+        LocalDate tomorow = today.plusDays(2);
         //LocalDate twoDaysAfter = today.plusDays(4);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -72,7 +72,8 @@ public class BasketballApiServices {
         getAndSaveGames(league, season, todayDate).subscribe();
         getAndSaveGames(league, season, tomorowDate).subscribe();
     }
-    */
+     */
+
 
 
     @Scheduled(initialDelay = 1800000, fixedRate = 3600000) // Po 30 minutach, a potem co godzinę
