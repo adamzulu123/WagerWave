@@ -31,26 +31,28 @@
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-md navbar-dark shadow">
+<nav class="navbar navbar-expand-md navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand fw-bold" th:href="@{/Main}">WagerWave</a>
+        <a class="navbar-brand" th:href="@{/Main}">WagerWave</a>
 
         <!-- Hamburger button (widoczny na mniejszych ekranach) -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <!-- Lewa część menu -->
             <ul class="navbar-nav">
-                <li class="nav-item active" id="bets">
+                <li class="nav-item" id="bets">
                     <a class="nav-link" th:href="@{/Main}">Bets</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/History}">History</a>
                 </li>
             </ul>
 
             <!-- Prawa część menu (kwota i imię) -->
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto"> <!-- Dodano ms-auto do wypozycjonowania po prawej stronie -->
                 <li class="nav-item" id="wallet">
                     <a class="nav-link" th:href="@{/Account#wallet}">
                         <img src="../images/Wallet.png" alt="wallet">
@@ -58,16 +60,16 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
-                       role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="../images/User.png" alt="user">
-                        <span class="ms-1" th:text="${user.firstName}+' '+${user.lastName}">User Name</span>
+                        <span th:text="${user.firstName}+' '+${user.lastName}"> User Name</span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" th:href="@{/Account}">My account</a></li>
                         <li><a class="dropdown-item" th:href="@{/Account#wallet}">My wallet</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" th:href="@{/Main}">Bets</a></li>
+                        <li><a class="dropdown-item" th:href="@{/History}">History</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" th:href="@{/Account#daily-limit}">Daily limit</a></li>
                         <li><hr class="dropdown-divider"></li>
