@@ -54,11 +54,11 @@ body h1{
     border-radius: 20px;
     border: none;
 }
-/*
+
 #successMessage, #errorMessage {
     transition: opacity 1s ease-out;
 }
-*/
+
 
 .cont-fluid {
     position: relative;

@@ -88,7 +88,6 @@ public class RegistrationController {
         }
 
         if (result.hasErrors()) {
-            model.addAttribute("user", new MyUser()); //czyszczenie danych w obiekie user
             model.addAttribute("registrationStatus", "failed");
             return "registration";
         }

@@ -10,7 +10,7 @@ loginBtn.addEventListener('click', () => {
     container.classList.remove("right-panel-active");
 });
 
-/*
+
 document.addEventListener("DOMContentLoaded", () =>{
     const registerSuccess = document.getElementById("successRegisterMessage");
     const registerError = document.getElementById("errorRegisterMessage");
@@ -19,15 +19,15 @@ document.addEventListener("DOMContentLoaded", () =>{
     setTimeout(() => {
         if (registerSuccess) {
             registerSuccess.style.opacity = "0";
-            setTimeout(() => registerSuccess.style.display = "none", 1000);
+            setTimeout(() => registerSuccess.style.visibility = "hidden", 1000);
         }
         if (registerError) {
             registerError.style.opacity = "0";
-            setTimeout(() => registerError.style.display = "none", 1000);
+            setTimeout(() => registerError.style.visibility = "hidden", 1000);
         }
-    }, 5000);
+    }, 10000);
 });
-*/
+
 
 
 
