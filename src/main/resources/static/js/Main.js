@@ -68,6 +68,7 @@ function initializeBetButtons() {
     const basketHeader = document.querySelector('.basket-header h5');
 
     singleBtn.addEventListener('click', () => {
+        moveBasketItems(comboSection, singleSection, false);
         toggleSections(singleSection, comboSection);
         toggleSections(singleSummary, comboSummary);
         singleBtn.classList.add('active');
@@ -77,6 +78,7 @@ function initializeBetButtons() {
     });
 
     comboBtn.addEventListener('click', () => {
+        moveBasketItems(singleSection, comboSection, true);
         toggleSections(comboSection, singleSection);
         toggleSections(comboSummary, singleSummary);
         singleBtn.classList.remove('active');
@@ -84,6 +86,107 @@ function initializeBetButtons() {
         basketHeader.innerText = 'Your coupon';
         updateBasketSummary();
     });
+}
+
+
+/**
+ * Funkcja przenosząca elementy koszyka między sekcjami
+ * @param {HTMLElement} fromSection - Sekcja, z której przenosimy elementy
+ * @param {HTMLElement} toSection - Sekcja, do której przenosimy elementy
+ */
+function moveBasketItems(fromSection, toSection, isSingleToCombo) {
+    const fromBasketItems = fromSection.querySelectorAll('.basket-item');
+    const toBasketItems = toSection.querySelectorAll('.basket-item');
+    const stakeCombo = document.querySelector('.stake-combo');
+
+    let basketBody = toSection.querySelector('.basket-items');
+    basketBody.innerHTML = '';
+
+    if (isSingleToCombo) {
+        let totalStake = 0;
+        fromBasketItems.forEach(item => {
+            const eventID = item.getAttribute('data-event-id');
+            const eventEndTime = item.getAttribute('data-event-end-time');
+            const betName = item.querySelector('.bet-name').innerText;
+            const betTeam = item.querySelector('.bet-team').innerText;
+            const eventOdds = item.querySelector('.event-odds').innerText;
+
+            const stakeInput = item.querySelector('.stake-single').value;
+            totalStake += parseFloat(stakeInput);
+
+            const basketItem = document.createElement('div');
+            basketItem.classList.add('basket-item');
+            basketItem.setAttribute('data-event-id', eventID);
+            basketItem.setAttribute('data-event-end-time', eventEndTime);
+
+            basketItem.innerHTML = `
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="bet-name">${betName}</div>
+                        <div class="bet-team">${betTeam}</div>
+                    </div>
+                    <div class="close-and-odds">
+                        <button class="btn-close" aria-label="Close"></button>
+                        <div class="event-odds">${eventOdds}</div>
+                    </div>
+                </div>
+            `;
+
+            basketBody.appendChild(basketItem);
+
+            basketItem.querySelector('.btn-close').addEventListener('click', () => {
+                basketBody.removeChild(basketItem);
+                updateBasketSummary();
+            });
+        });
+        if (totalStake > 0) stakeCombo.value = totalStake.toFixed(2);
+    }
+    else {
+        fromBasketItems.forEach(item => {
+            const eventID = item.getAttribute('data-event-id');
+            const eventEndTime = item.getAttribute('data-event-end-time');
+            const betName = item.querySelector('.bet-name').innerText;
+            const betTeam = item.querySelector('.bet-team').innerText;
+            const eventOdds = item.querySelector('.event-odds').innerText;
+
+            const basketItem = document.createElement('div');
+            basketItem.classList.add('basket-item');
+            basketItem.setAttribute('data-event-id', eventID);
+            basketItem.setAttribute('data-event-end-time', eventEndTime);
+
+            basketItem.innerHTML = `
+                <div class="single-item d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="bet-name">${betName}</div>
+                        <div class="bet-team">${betTeam}</div>
+                    </div>
+                    <div class="close-and-odds">
+                        <button class="btn-close" aria-label="Close"></button>
+                        <div class="event-odds">${eventOdds}</div>
+                    </div>
+                </div>
+                <div class="item-stake">
+                    <input type="number" min="0" step="0.01" class="stake-single form-control form-control-sm" placeholder="Stake (PLN)">
+                    <span class="win-single">
+                        <span class="win-single-text">Potential win:</span><br>
+                        <span class="win-single-value">0,00</span> PLN
+                    </span>
+                </div>
+            `;
+
+            basketBody.appendChild(basketItem);
+
+            basketItem.querySelector('.btn-close').addEventListener('click', () => {
+                basketBody.removeChild(basketItem);
+                updateBasketSummary();
+            });
+
+            const stakeInput = basketItem.querySelector('.stake-single');
+            if (stakeInput) {
+                addStakeInputListener(stakeInput);
+            }
+        });
+    }
 }
 
 /**
