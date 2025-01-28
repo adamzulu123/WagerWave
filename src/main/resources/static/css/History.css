@@ -1,21 +1,24 @@
-/* Podstawowy styl dla body */
-body {
+/* ======= RESET / BAZOWE USTAWIENIA ======= */
+html, body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    /* Tło z gradientem */
-    background: linear-gradient(130deg, rgba(2, 61, 84, 1) 0%, rgba(46, 139, 87, 1) 35%, rgba(255, 255, 102, 1) 100%);
+}
+
+/* ======= GRADIENT TŁA ======= */
+body {
+    background: linear-gradient(
+            130deg,
+            rgba(2, 61, 84, 1) 0%,
+            rgba(46, 139, 87, 1) 35%,
+            rgba(255, 255, 102, 1) 100%
+    );
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
 }
 
-/* Główna zawartość, żeby nie chowała się pod navbarem */
-.main-content {
-    margin-top: 86px;
-}
-
-/* Navbar – zawsze fixed na górze */
+/* ======= NAVBAR FIXED ======= */
 .navbar {
     position: fixed !important;
     top: 0;
@@ -26,12 +29,10 @@ body {
     color: white;
     box-shadow: 0 3px 3px rgba(0, 0, 0, 0.7);
 }
-
-/* Navbar brand */
 .navbar-brand {
     color: white;
     font-weight: bolder;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: "Courier New", Courier, monospace;
     font-size: x-large;
     transition-duration: 0.3s;
 }
@@ -40,10 +41,8 @@ body {
     transform: scale(1.05);
     transition-duration: 0.3s;
 }
-
-/* Linki w nawigacji */
 .navbar-nav .nav-link {
-    color: white;
+    color: white !important;
 }
 .nav-link:hover {
     background-color: rgba(255, 255, 255, 0.1);
@@ -62,8 +61,6 @@ body {
     margin-left: 1.5rem;
     margin-right: 1.5rem;
 }
-
-/* Menu rozwijane (dropdown) */
 .dropdown-menu {
     z-index: 1000;
     background-color: #1b7843;
@@ -82,7 +79,12 @@ body {
     color: white;
 }
 
-/* Filtry */
+/* ====== MAIN CONTENT ====== */
+.main-content {
+    margin-top: 86px; /* odstęp od navbara */
+}
+
+/* ====== FILTRY ====== */
 .filter-section {
     background-color: rgba(164, 211, 185, 0.3);
     padding: 10px;
@@ -90,10 +92,12 @@ body {
     text-align: center;
 }
 .filter-section h5 {
-    color: #fff; /* Biały nagłówek */
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 1rem;
 }
 
-/* Przyciski filtrów (zamiast outline – pełne tło) */
+/* Przycisk filtra: wypełnione tło, nie outline */
 .filter-btn {
     margin: 0 4px;
     font-weight: bold;
@@ -105,11 +109,11 @@ body {
     transform: scale(1.06);
 }
 
-/* Przykładowe style dla każdego filtra */
+/* Przyciski filtra (kolory) */
 .filter-btn.btn-dark {
-    background-color: #2C3E50 !important;
+    background-color: #2c3e50 !important;
     color: #fff !important;
-    border-color: #2C3E50 !important;
+    border-color: #2c3e50 !important;
 }
 .filter-btn.btn-warning {
     background-color: #f1c40f !important;
@@ -131,7 +135,7 @@ body {
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
 }
 
-/* Kontener historii */
+/* ====== SEKCJA HISTORII ====== */
 .bets-history-container {
     background-color: rgba(164, 211, 185, 0.3);
     padding: 20px;
@@ -147,8 +151,6 @@ body {
     color: #fff;
     text-align: center;
 }
-
-/* Nagłówek dla sekcji (np. "Individual Bets", "Coupons") */
 .custom-h3 {
     font-size: 1.2rem;
     font-weight: bold;
@@ -156,7 +158,7 @@ body {
     margin-top: 25px;
 }
 
-/* Karty pojedynczych betów i kuponów (efekt hover) */
+/* Karty bet/coupon + hover */
 .single-bet-item,
 .coupon-item {
     background-color: #fff;
@@ -169,77 +171,77 @@ body {
     transform: scale(1.01);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
-
-/* Szczegóły kuponu (po rozwinięciu) */
 .coupon-bet-details {
     background-color: #f8f9fa;
     border-radius: 5px;
 }
 
+/* ====== BILANS (GLASS LOOK) ====== */
 .balance-info {
-    /* Przezroczyste tło w stylu "glass" */
     background-color: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 1rem;
-
-    /* Cień, aby nadać efekt "karty" */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-
-    /* Tekst i wewnętrzne odstępy */
-    color: #fff;       /* Zachowujemy białą czcionkę */
-    font-weight: bold; /* Podkreślamy sekcję */
-    padding: 1.5rem;   /* Większy odstęp wewnętrzny */
-    position: relative; /* Umożliwia ewentualne pseudo-elementy */
-    text-align: center; /* Wyrównanie tekstu do środka */
+    color: #fff;
+    font-weight: bold;
+    padding: 1.5rem;
+    position: relative;
+    text-align: center;
 }
-
-/* Styl samego nagłówka sekcji bilansu */
 .balance-info h5 {
     font-size: 1.4rem;
     margin-bottom: 1rem;
-
-    /* Dodatkowa "etykieta" */
     display: inline-block;
     padding: 0.4rem 1.2rem;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.2);
 }
-
 .balance-info p {
     color: #fff;
     margin: 0.5rem 0;
-    font-weight: normal; /* Dla czytelności: paragrafy zwykłe, a wartości pogrubione */
+    font-weight: normal;
 }
-
-/* Możesz też wyróżnić wartości (np. <strong>) w inny sposób */
 .balance-info strong {
     color: #fff;
     font-weight: bold;
     font-size: 1.1rem;
 }
-
-/* Dodatek – delikatny ozdobny pasek u góry lub z boku */
 .balance-info::before {
     content: "";
     position: absolute;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 8px;
-    background: linear-gradient(
-            to right,
-            rgba(255, 255, 255, 0.4),
-            rgba(255, 255, 255, 0.1)
-    );
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
 }
 
-/* Responsywność */
+/* ====== KOLORY WYNIKU BET/COUPON ====== */
+/* Zwiększamy specyficzność i dodajemy !important. */
+.single-bet-item span.result-pending,
+.coupon-item span.result-pending,
+.coupon-bet-details span.result-pending {
+    color: #f1c40f !important;
+    font-weight: bold;
+}
+.single-bet-item span.result-won,
+.coupon-item span.result-won,
+.coupon-bet-details span.result-won {
+    color: #27ae60 !important;
+    font-weight: bold;
+}
+.single-bet-item span.result-lost,
+.coupon-item span.result-lost,
+.coupon-bet-details span.result-lost {
+    color: #c0392b !important;
+    font-weight: bold;
+}
+
+/* ====== RESPONSYWNOŚĆ (max-width: 768px) ====== */
 @media (max-width: 768px) {
-    /* W wersji mobilnej – najlepiej zachować navbar fixed.
-       Możesz ewentualnie usunąć/zmienić position,
-       jeśli chcesz innego zachowania. */
     .navbar {
         position: fixed !important;
     }
