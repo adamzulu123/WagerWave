@@ -1,0 +1,284 @@
+/* ======= RESET / BAZOWE USTAWIENIA ======= */
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* ======= GRADIENT TŁA ======= */
+body {
+    background: linear-gradient(
+            130deg,
+            rgba(2, 61, 84, 1) 0%,
+            rgba(46, 139, 87, 1) 35%,
+            rgba(255, 255, 102, 1) 100%
+    );
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+/* ======= NAVBAR FIXED ======= */
+.navbar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    background-color: #1b7843;
+    color: white;
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.7);
+}
+.navbar-brand {
+    color: white;
+    font-weight: bolder;
+    font-family: "Courier New", Courier, monospace;
+    font-size: x-large;
+    transition-duration: 0.3s;
+}
+.navbar-brand:hover {
+    color: white;
+    transform: scale(1.05);
+    transition-duration: 0.3s;
+}
+.navbar-nav .nav-link {
+    color: white !important;
+}
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+.nav-item.active {
+    font-weight: bold;
+}
+.nav-item img {
+    height: 25px;
+    width: auto;
+    margin-right: 8px;
+    margin-bottom: 3px;
+}
+#bets, #wallet {
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+}
+.dropdown-menu {
+    z-index: 1000;
+    background-color: #1b7843;
+    text-align: center;
+}
+#userDropdown.show {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    color: white;
+}
+.dropdown-item {
+    color: white;
+}
+.dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* ====== MAIN CONTENT ====== */
+.main-content {
+    margin-top: 86px; /* odstęp od navbara */
+}
+
+/* ====== FILTRY ====== */
+.filter-section {
+    background-color: rgba(164, 211, 185, 0.3);
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+.filter-section h5 {
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+/* Przycisk filtra: wypełnione tło, nie outline */
+.filter-btn {
+    margin: 0 4px;
+    font-weight: bold;
+    transition: transform 0.3s, opacity 0.3s;
+    opacity: 0.9;
+}
+.filter-btn:hover {
+    opacity: 1;
+    transform: scale(1.06);
+}
+
+/* Przyciski filtra (kolory) */
+.filter-btn.btn-dark {
+    background-color: #2c3e50 !important;
+    color: #fff !important;
+    border-color: #2c3e50 !important;
+}
+.filter-btn.btn-warning {
+    background-color: #f1c40f !important;
+    color: #222 !important;
+    border-color: #f1c40f !important;
+}
+.filter-btn.btn-success {
+    background-color: #27ae60 !important;
+    color: #fff !important;
+    border-color: #27ae60 !important;
+}
+.filter-btn.btn-danger {
+    background-color: #c0392b !important;
+    color: #fff !important;
+    border-color: #c0392b !important;
+}
+.active-filter {
+    opacity: 1 !important;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
+}
+
+/* ====== SEKCJA HISTORII ====== */
+.bets-history-container {
+    background-color: rgba(164, 211, 185, 0.3);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 60px;
+}
+.bets-history-container h2 {
+    margin-bottom: 20px;
+    font-size: 1.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff;
+    text-align: center;
+}
+.custom-h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    margin-top: 25px;
+}
+
+/* Karty bet/coupon + hover */
+.single-bet-item,
+.coupon-item {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.single-bet-item:hover,
+.coupon-item:hover {
+    transform: scale(1.01);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+.coupon-bet-details {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+/* ====== BILANS (GLASS LOOK) ====== */
+.balance-info {
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    font-weight: bold;
+    padding: 1.5rem;
+    position: relative;
+    text-align: center;
+}
+.balance-info h5 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+    padding: 0.4rem 1.2rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+}
+.balance-info p {
+    color: #fff;
+    margin: 0.5rem 0;
+    font-weight: normal;
+}
+.balance-info strong {
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+.balance-info::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+/* ====== KOLORY WYNIKU BET/COUPON ====== */
+/* Zwiększamy specyficzność i dodajemy !important. */
+.single-bet-item span.result-pending,
+.coupon-item span.result-pending,
+.coupon-bet-details span.result-pending {
+    color: #f1c40f !important;
+    font-weight: bold;
+}
+.single-bet-item span.result-won,
+.coupon-item span.result-won,
+.coupon-bet-details span.result-won {
+    color: #27ae60 !important;
+    font-weight: bold;
+}
+.single-bet-item span.result-lost,
+.coupon-item span.result-lost,
+.coupon-bet-details span.result-lost {
+    color: #c0392b !important;
+    font-weight: bold;
+}
+
+/* ====== RESPONSYWNOŚĆ (max-width: 768px) ====== */
+@media (max-width: 768px) {
+    .navbar {
+        position: fixed !important;
+    }
+    .navbar-toggler {
+        border: none;
+    }
+    .nav-item {
+        text-align: center;
+        display: block;
+    }
+    .nav-link {
+        display: block;
+    }
+    .nav-item.active {
+        font-weight: normal;
+    }
+    #bets,
+    #wallet {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .dropdown-menu {
+        background-color: #178848;
+        text-align: center;
+    }
+
+    .bets-history-container h2 {
+        font-size: 1.4rem;
+    }
+    .custom-h3 {
+        font-size: 1.1rem;
+    }
+    .single-bet-item,
+    .coupon-item {
+        padding: 10px;
+    }
+    .balance-info p {
+        margin: 0;
+    }
+}

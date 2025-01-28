@@ -2,19 +2,28 @@ package com.ww.WagerWave.Security;
 
 import com.ww.WagerWave.Services.UserServices;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 /*
 @Configuration - oznacza, że tak klasa to źrodlo definicji beanów oraz oznacza ze za pomoca
 tej klasy będa odbywała configuracja springsecurity.
@@ -23,11 +32,10 @@ tej klasy będa odbywała configuracja springsecurity.
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor //automatyczne generowanie kontruktora ktory zawiera wsztkie elementy klasy
 public class SecurityConfig {
 
     @Autowired
-    private final UserServices userServices;
+    private UserServices userServices;
 
     @Bean
     public UserDetailsService getUserDetailsService() {
@@ -47,6 +55,30 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /*
+    jest to mechanizm bezpierczeństwa pozwalający na ograrniczenie dostępu do zasobów strony
+    tylko z określonych źródeł - udostępnianie zasobów miedzy domenami
+    czyli jakie domeny mogą uzyskiwać dostęp do zasobów z aplikacji backendowej
+
+    ALE narazie jest to nie używane ponieważ frontend i backend działają na tym samym porcie 8080, gdyby
+    front był na 3000 to było by to niezbędne do tego aby możliwa była komunikacja między nimi.
+    Bo wtedy przeglądarka traktuje front i back jako 2 'różne' źródła.
+     */
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedMethod("*"); //umożliwiamy POST, GET, PUT, DELETE, itp.
+        configuration.addAllowedHeader("*"); //wszystkie nagłówki http: np. Authorization, Content-Type
+        configuration.setAllowCredentials(true); //zezwalalmy na przekazywanie cookies między serverem a klientem
+
+        //obiekt, który pozwala na rejestrowanie konfiguracji CORS i rejestruje ją dla wszystkich ścieżek
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
@@ -62,9 +94,22 @@ public class SecurityConfig {
             .anyRequest().authenticated() - to powoduje, że każdy inny zasbów/url/strona, która nie znajduję
             się wyżej w wyjątkach, wymaga aby użytkownik byl uwierzytelniony inaczej nie ma do niej dostępu.
              */
+
+        // Tworzymy handler do usuwania plików cookie przy wylogowywaniu
+        HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(
+                new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.COOKIES)
+        );
+
+        // Tworzymy domyślnego SecurityContextLogoutHandler
+        //SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
+        //tego jednak nie trzeba dodawać bo on jest domyślnie używany jako jeden handlerow, jesli korzystamy z domyślnego
+        //systemy wylogowywania od spring security - dlatego przy usunieciu konta z niego korzystam !!!
+        //on domyślnie usuwa sesje uzytkownika - czysci dane sesji i kontekst bezpieczeństwa
+
+
         return http
                 .authorizeHttpRequests(authorizeRequests ->{
-                    authorizeRequests.requestMatchers("/registration", "/register","/images/**", "/css/**","/js/**" ).permitAll();
+                    authorizeRequests.requestMatchers("/registration", "/register","/images/**", "/css/**","/js/**", "/forgot-password").permitAll();
                     authorizeRequests.anyRequest().authenticated(); //każda inna musi być uwierzytelniony użytkownik
                 })
                 //konfiguracja ustawien logowania
@@ -74,10 +119,15 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/Main", true) //po zalogowaniu, przekierowania na główna strone
                         .failureHandler(new CustomAuthenticationFailureHandler()) //dodanie handlera do obłsugi błedów logowania
                 )
+                //domyślne wylogowywanie
                 .logout(config -> config
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/registration")) //po wylogownaniu powrót na strone do rejestracji
-
+                        .logoutSuccessUrl("/registration") //po wylogownaniu powrót na strone do rejestracji
+                        .addLogoutHandler(clearSiteData))
+                .sessionManagement(session -> session
+                        .maximumSessions(-1)  //-1 brak limitu ilości sesji
+                )
+                .csrf(AbstractHttpConfigurer::disable) //bez tego POST nie działało!
                 .build(); //utworzenie i zwrocenie obiektu
     }
 }

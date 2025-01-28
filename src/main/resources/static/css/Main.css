@@ -1,0 +1,594 @@
+/* Podstawowy styl dla body */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(130deg, rgba(2, 61, 84, 1) 0%, rgba(46, 139, 87, 1) 35%, rgba(255, 255, 102, 1) 100%);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100vw 100vh;
+}
+
+/* Ustawienia nawigacji */
+.navbar {
+    background-color: #1b7843;
+    color: white;
+    z-index: 10;
+    box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.7);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.navbar-brand {
+    color: white;
+    font-weight: bolder;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: x-large;
+    transition-duration: 0.3s;
+}
+
+.navbar-brand:hover {
+    color: white;
+    transform: scale(1.05);
+    transition-duration: 0.3s;
+}
+
+.navbar-nav .nav-link {
+    color: white;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.nav-link:hover{
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+.nav-item.active {
+    font-weight: bold;
+}
+
+.nav-item img {
+    height: 25px;
+    width: auto;
+    margin-right: 8px;
+    margin-bottom: 3px;
+}
+
+#bets, #wallet {
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+}
+
+.dropdown-menu {
+    z-index: 1000;
+    background-color: #1b7843;
+    text-align: center;
+}
+
+#userDropdown.show {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    color: white;
+}
+
+.dropdown-item {
+    color: white;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* Kontener główny */
+.container-fluid {
+    flex: 1;
+}
+
+#main {
+    margin-top: 86px;
+}
+
+/* Kategorie */
+.categories-box {
+    position: sticky;
+    top: 86px;
+    max-height: calc(100vh - 110px);
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid black;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    overflow: hidden;
+}
+
+.categories-box:hover {
+    transform: scale(1.01);
+}
+
+#categoryAccordion {
+    flex: 1;
+    overflow-y: auto;
+}
+
+#categoryAccordion::-webkit-scrollbar {
+    width: 8px;
+}
+
+#categoryAccordion::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 4px;
+}
+
+#categoryAccordion::-webkit-scrollbar-track {
+    border-radius: 4px;
+}
+
+.categories-box h5 {
+    font-weight: bold;
+    margin-bottom: 15px;
+    margin-top: 5px;
+    color: white;
+}
+
+.accordion-item {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-color: #000000;
+    border-radius: 0;
+}
+
+.accordion-button {
+    font-weight: 600;
+    color: white;
+    background-color: rgba(0, 0, 0, 0);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.accordion-button:hover {
+    color: yellow;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: rgba(255, 255, 102, 1);
+    color: black;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+.accordion-body {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: white;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.accordion-body ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.accordion-body a {
+    color: white;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+    padding: 0;
+}
+
+.accordion-body a:hover {
+    color: yellow;
+}
+
+.accordion-body a.active {
+    color: yellow;
+}
+
+/* Wydarzenia */
+.events-container {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+}
+
+.events-container h5 {
+    color: #333;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+}
+
+.event-box {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: 'Arial', sans-serif;
+    margin-bottom: 16px;
+    padding: 16px;
+}
+
+.event-box:last-child {
+    margin-bottom: 0;
+}
+
+.event-box:hover {
+    transform: scale(1.02);
+}
+
+.event-header span {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #555;
+}
+
+.event-teams .team-name-1, .team-name-2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.event-buttons .btn {
+    flex-grow: 1;
+    margin: 0 5px;
+    text-align: center;
+    padding: 10px 5px;
+    font-size: 0.8rem;
+    color: white;
+    background-color: #1b7843;
+    border: 1px solid black;
+}
+
+.event-buttons .btn:first-child {
+    margin-left: 0;
+}
+
+.event-buttons .btn:last-child {
+    margin-right: 0;
+}
+
+.event-buttons .btn strong {
+    font-size: 1.2rem;
+}
+
+.event-buttons .btn:hover {
+    color: yellow;
+    background-color: #1b7843;
+    border: 1px solid black;
+}
+
+/* Koszyk */
+.basket-container {
+    position: sticky;
+    top: 86px;
+    height: calc(100vh - 110px);
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    color: black;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+}
+
+.basket-container h5 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+.basket-header {
+    position: relative;
+}
+
+.basket-title {
+    text-align: center;
+    width: 100%;
+}
+
+.clear-basket-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 15px;
+    background: none;
+    border: none;
+}
+
+.clear-basket-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.basket-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+#single-btn, #combo-btn {
+    background-color: #1b7843;
+    border: 1px solid black;
+    color: white;
+    width: 50%;
+    font-weight: bold;
+    transition-duration: 0.3s;
+}
+
+#single-btn {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+#combo-btn {
+    margin-right: 15px;
+}
+
+#single-btn:hover, #combo-btn:hover {
+    color: yellow;
+    transform: scale(1.01);
+}
+
+#single-btn.active, #combo-btn.active {
+    background-color: rgba(255, 255, 102, 1);
+    color: black;
+}
+
+.basket-body {
+    flex: 1;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    border-top: 2px solid #ccc;
+    border-bottom: 2px solid #ccc;
+    color: black;
+    padding: 10px;
+}
+
+.basket-item {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    margin-bottom: 10px;
+}
+
+.basket-item:last-child {
+    margin-bottom: 0;
+}
+
+.single-item {
+    border-bottom: 1px solid #ccc;
+}
+
+.bet-name {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #555;
+}
+
+.bet-team {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+    margin-top: 18px;
+    margin-bottom: 14px;
+}
+
+.close-and-odds {
+    text-align: right;
+}
+
+.event-odds {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background-color: #1b7843;
+    padding: 8px;
+    border-radius: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.btn-close {
+    color: #555;
+    font-size: 0.8rem;
+    transition-duration: 0.3s;
+}
+
+.item-stake {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.stake-single {
+    width: 50%;
+    background-color: #f9f9f9;
+    margin-top: 8px;
+    height: 40px;
+}
+
+.win-single {
+    margin-left: 5px;
+    width: 50%;
+    text-align: right;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.win-single-text {
+    font-weight: normal;
+    font-size: x-small;
+    color: #555;
+}
+
+.win-single-value {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+#single-summary {
+    padding: 15px;
+}
+
+#single-summary p {
+    margin: 0;
+}
+
+#combo-summary {
+    padding: 15px;
+}
+
+#combo-summary p {
+    margin: 0;
+}
+
+.stake-combo {
+    width: 50%;
+    background-color: #f9f9f9;
+    height: 40px;
+}
+
+#combo-total-odds {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background-color: #1b7843;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.d-none {
+    display: none;
+}
+
+#summary-button {
+    width: 100%;
+    background-color: rgba(2, 61, 84, 1);
+    color: white;
+    font-weight: bold;
+}
+
+#summary-button:disabled {
+    background-color: #555;
+    color: white;
+    border: none;
+}
+
+#summary-button.btn-error:disabled {
+    box-sizing: border-box;
+    border: 1px solid red;
+}
+
+#summary-button.btn-confirm {
+    background-color: #1b7843;
+}
+
+#summary-button:hover {
+    color: yellow;
+    border: 1px solid black;
+}
+
+/* Stopka */
+footer {
+    color: black;
+    text-align: center;
+    padding: 20px;
+}
+
+footer p {
+    font-weight: bold;
+    margin: 0;
+}
+
+#page-footer {
+    display: none;
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+    .navbar {
+        position: relative;
+    }
+
+    .navbar-collapse {
+        align-items: center;
+    }
+
+    .navbar-toggler {
+        border: none;
+    }
+
+    .nav-item {
+        text-align: center;
+        display: block;
+    }
+
+    .nav-link {
+        display: block;
+    }
+
+    .nav-item.active {
+        font-weight: normal;
+    }
+
+    #bets, #wallet {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .dropdown-menu {
+        background-color: #178848;
+        text-align: center;
+    }
+
+    #main {
+        margin-top: 35px;
+    }
+
+    .categories-box {
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .accordion-body a {
+        font-size: 1.2rem;
+    }
+
+    .events-container {
+        margin-top: 15px;
+        max-height: calc(100vh - 110px);
+        overflow-y: auto;
+    }
+
+    .basket-container {
+        margin-top: 35px;
+    }
+
+    #event-footer {
+        display: none;
+    }
+
+    #page-footer {
+        display: block;
+    }
+}

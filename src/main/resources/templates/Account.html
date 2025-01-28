@@ -1,30 +1,178 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Account</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/UserPageStyle.css" />
+    <title>User Profile</title>
 </head>
 <body>
-<header>
-  <h1>Your Account</h1>
-</header>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/Main}">WagerWave</a>
 
-<nav>
-  <a th:href="@{/}">Home</a>
-  <a th:href="@{/Account}">Your Account</a>
-  <form action="#" th:action="@{/logout}" method="post" style="display:inline;">
-    <button type="submit">Log Out</button>
-  </form>
-</nav>
-<div class="account_management">
-  <h2>Your Account</h2>
-  <div class="account_data"></div>
-    <p> <span th:text="${user.email}"></span></p>
+            <!-- Hamburger button (widoczny na mniejszych ekranach) -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-</div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Lewa część menu -->
+                <ul class="navbar-nav">
+                    <li class="nav-item" id="bets">
+                        <a class="nav-link" th:href="@{/Main}">Bets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/History}">History</a>
+                    </li>
+                </ul>
+
+                <!-- Prawa część menu (kwota i imię) -->
+                <ul class="navbar-nav ms-auto"> <!-- Dodano ms-auto do wypozycjonowania po prawej stronie -->
+                    <li class="nav-item active" id="wallet_balance">
+                        <a class="nav-link"  href="#wallet">
+                            <img src="../images/Wallet.png" alt="wallet">
+                            <span id='wallet-balance' th:text="${wallet.balance}">0,00</span><span> PLN</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
 
+
+
+    <!-- Account details -->
+    <div class="container-fluid cont-fluid account mt-4" id="container">
+        <div class="account_info">
+            <div class="card-header text-center">
+                <h2 class="profile-title">Your Profile</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-container">
+                    <form>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-input form-control" id="name" placeholder="Name"
+                                th:value="${user.firstName}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="surname" class="form-label">Surname</label>
+                            <input type="text" class="form-input form-control" id="surname" placeholder="Surname"
+                                th:value="${user.lastName}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-input form-control" id="email" placeholder="Email"
+                                th:value="${user.email}" readonly>
+                        </div>
+
+                    </form>
+                    <!-- Password changing block -->
+
+                        <form th:action="@{/changePassword}" method="POST" id="change-password">
+                            <div class="mb-3">
+                                <label for="currentPassword" class="form-label">Current Password</label>
+                                <input type="password" class="form-input form-control" id="currentPassword" name="currentPassword" placeholder="Current Password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label mt-3">New Password</label>
+                                <input type="password" class="form-input form-control" id="newPassword" name="newPassword" placeholder="New Password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Change Password</button>
+                        </form>
+
+
+                    <!-- Showing results of password change -->
+                    <div th:if="${successMessage}" class="alert alert-success mt-3" role="alert">
+                        <span th:text="${successMessage}"></span>
+                    </div>
+                    <div th:if="${errorMessage}" class="alert alert-danger mt-3" role="alert">
+                        <span th:text="${errorMessage}"></span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Account management section-->
+            <div class="account-management mt-3">
+                <form th:action="@{/logout}" method="POST">
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-secondary w-100">Log Out</button>
+                    </div>
+                </form>
+                <form th:action="@{/deleteAccount}" method="POST" id="delete-account">
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Enter your password to confirm deletion</label>
+                        <input type="password" class="form-input form-control" id="password" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger w-100">Delete Account</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!--Wallet management -->
+    <div class="container-fluid cont-fluid wallet mt-4" id="wallet">
+        <div class="wallet-section text-center">
+            <h4 class="wallet-title">Wallet Balance</h4>
+            <div class="wallet-icon">
+                <i class="bi bi-cash-stack"></i>
+            </div>
+            <div class="balance">
+                <p><span id="balance" th:text="${wallet.balance}"></span></p>
+            </div>
+
+            <div class="wallet-actions d-flex justify-content-between flex-wrap">
+                <a th:href="@{/depositPage}" class="btn btn-secondary col-12 col-md-5 mb-2">Deposit</a>
+                <a th:href="@{/withdrawPage}" class="btn btn-danger col-12 col-md-5 mb-2">Withdraw</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily limit management -->
+    <div class="container-fluid cont-fluid limit mt-4" id="daily-limit">
+        <div class="limit-section text-center">
+            <h4 class="limit-title">Set Daily Limit</h4>
+            <p>Current Limit: <span id="dailyLimit" th:text="${wallet.dailyLimit}"> PLN</span></p>
+
+
+            <form th:action="@{/setDailyLimit}" method="POST">
+                <div class="mb-3">
+
+                    <label for="newLimit" class="form-label"></label>
+                    <input type="range" class="form-range" id="newLimit" name="newLimit" min="50" max="500" step="10"
+                           th:value="${wallet.dailyLimit}"> <!-- domyslnie ustawiamy aktualny linit  -->
+
+                    <p>New limit: <span id="limitValue"></span> PLN</p>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 mt-3 confirm-limit-btn">Confirm Limit Change</button>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        //obsługa suwaka
+        const slider = document.getElementById('newLimit');
+        const limitValue = document.getElementById('limitValue');
+
+        slider.oninput = function() {
+            limitValue.textContent = slider.value;
+        }
+
+        limitValue.textContent = slider.value;
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
 

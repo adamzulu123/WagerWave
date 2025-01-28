@@ -3,31 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Betting App - Home</title>
+    <title>WagerWave</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="../css/Main.css" rel="stylesheet">
 </head>
 <body>
-<header>
-    <h1>Welcome to Betting App</h1>
-</header>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/Main}">WagerWave</a>
+            
+            <!-- Hamburger button (widoczny na mniejszych ekranach) -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-<nav>
-    <a th:href="@{/}">Home</a>
-    <a th:href="@{/Account}">YourAccount</a>
-</nav>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Lewa część menu -->
+                <ul class="navbar-nav">
+                    <li class="nav-item active" id="bets">
+                        <a class="nav-link" th:href="@{/Main}">Bets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/History}">History</a>
+                    </li>
+                </ul>
+                
+                <!-- Prawa część menu (kwota i imię) -->
+                <ul class="navbar-nav ms-auto"> <!-- Dodano ms-auto do wypozycjonowania po prawej stronie -->
+                    <li class="nav-item" id="wallet">
+                        <a class="nav-link" th:href="@{/Account#wallet}">
+                            <img src="../images/Wallet.png" alt="wallet">
+                            <span id='wallet-balance' th:text="${wallet.balance}">0,00</span><span> PLN</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="../images/User.png" alt="user">
+                            <span th:text="${user.firstName}+' '+${user.lastName}"> User Name</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" th:href="@{/Account}">My account</a></li>
+                            <li><a class="dropdown-item" th:href="@{/Account#wallet}">My wallet</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" th:href="@{/Main}">Bets</a></li>
+                            <li><a class="dropdown-item" th:href="@{/History}">History</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" th:href="@{/Account#daily-limit}">Daily limit</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" th:href="@{/Account}">Change password</a></li>
+                            <li><a class="dropdown-item" th:href="@{/Account}">Delete account</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post" style="display: inline;">
+                                    <button type="submit" class="dropdown-item" style="cursor: pointer;">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<div class="content">
-    <h2>Upcoming Sports Events</h2>
-    <div th:if="${events != null}">
-        <ul>
-            <li th:each="event : ${events}">
-                <span th:text="${event.name}">Event Name</span> -
-                <span th:text="${event.date}">Event Date</span>
-            </li>
-        </ul>
+
+    <!-- Main Content -->
+    <div class="container-fluid" id="main">
+        <div class="row">
+            <!-- Left Column (Categories) -->
+            <div class="col-md-3">
+                <div class="categories-box p-2 rounded">
+                    <h5>Categories</h5>
+                    <div class="accordion" id="categoryAccordion">
+                        <!-- Koszykówka -->
+                        <div class="accordion-item">
+                            <h6 class="accordion-header" id="headingBasketball">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseBasketball" aria-expanded="false" aria-controls="collapseBasketball" data-category-id="Basketball">
+                                    Basketball
+                                </button>
+                            </h6>
+                            <div id="collapseBasketball" class="accordion-collapse collapse" aria-labelledby="headingBasketball" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a class="text-decoration-none" href="#" data-subcategory-id="ALL">ALL</a></li>
+                                        <li><a class="text-decoration-none" href="#" data-subcategory-id="NBA">NBA</a></li>
+                                        <li><a class="text-decoration-none" href="#" data-subcategory-id="Euroleague">Euroleague</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Piłka nożna -->
+                        <div class="accordion-item">
+                            <h6 class="accordion-header" id="headingFootball">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseFootball" aria-expanded="false" aria-controls="collapseFootball" data-category-id="Football">
+                                    Football
+                                </button>
+                            </h6>
+                            <div id="collapseFootball" class="accordion-collapse collapse" aria-labelledby="headingFootball" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a class="text-decoration-none" href="#" data-subcategory-id="ALL">ALL</a></li>
+                                        <li><a class="text-decoration-none" href="#" data-subcategory-id="Premier League">Premier League</a></li>
+                                        <li><a class="text-decoration-none" href="#" data-subcategory-id="La Liga">La Liga</a></li>
+                                        <li><a class="text-decoration-none" href="#" data-subcategory-id="Ekstraklasa">Ekstraklasa</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <!-- MMA -->
+                        <div class="accordion-item">
+                            <h6 class="accordion-header" id="headingMMA">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseMMA" aria-expanded="false" aria-controls="collapseMMA" data-category-id="MMA">
+                                    MMA
+                                </button>
+
+                            </h6>
+                            <div id="collapseMMA" class="accordion-collapse collapse" aria-labelledby="headingMMA" data-bs-parent="#categoryAccordion">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li><a class="text-decoration-none" href="#" data-subcategory-id="ALL">ALL</a></li>
+                                        <li><a class="text-decoration-none" href="#" data-subcategory-id="UFC">UFC</a></li>
+                                        <li><a class="text-decoration-none" href="#" data-subcategory-id="Bellator">Bellator</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+
+            <!-- Middle Column (Events) -->
+            <div class="col-md-5">
+                <div class="events-container p-3 rounded">
+                    <h5 class="text-center">Events</h5>
+
+                    <!-- IF no event available -->
+                    <div th:if="${events.isEmpty()}">
+                        <p class="text-center">No upcoming events available.</p>
+                    </div>
+
+                    <!-- Showing available events -->
+                    <div th:each="event : ${events}" class="event-box rounded">
+                        <div class="x">
+                            <span class="event-date-time" th:text="${event.eventStartTime}"></span>
+                            <span class="event-name" th:text="${event.eventName}"></span>
+                        </div>
+                        <div class="event-teams d-flex justify-content-between my-2">
+                            <span class="team-name-1" th:text="${event.team1}"></span>
+                            <span class="team-name-2" th:text="${event.team2}"></span>
+                        </div>
+                        <div class="event-buttons d-flex justify-content-between">
+                            <button class="btn btn-outline-primary btn-sm">
+                                <span>1</span><br><strong th:text="${event.oddsTeam1}"></strong>
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm">
+                                <span>X</span><br><strong th:text="${event.oddsDraw}"></strong>
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm">
+                                <span>2</span><br><strong th:text="${event.oddsTeam2}"></strong>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <footer class="text-center" id="event-footer">
+                    <p>© 2025 WagerWave</p>
+                </footer>
+            </div>
+
+
+
+            <!-- Right Column (Basket) -->
+            <div class="col-md-4" id="basket-column">
+                <div class="basket-container">
+                    <div class="basket-header">
+                        <h5 class="basket-title">Your bets</h5>
+                        <button class="clear-basket-btn" id="clear-basket-btn">
+                            <img src="../images/Bin.png" alt="Clear Basket" class="clear-basket-icon">
+                        </button>
+                    </div>
+                    <div class="basket-buttons">
+                        <button class="btn active" id="single-btn">Single</button>
+                        <button class="btn" id="combo-btn">Coupon</button>
+                    </div>
+
+                    <!-- Single bets -->
+                    <div class="basket-body mt-3">
+                        <div class="basket-section" id="single-section">
+                            <div class="basket-items">
+                                
+                            </div>
+                        </div>
+
+                        <!-- Combo bets -->
+                        <div class="basket-section d-none" id="combo-section">
+                            <div class="basket-items">
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary -->
+                    <div class="basket-summary">
+                        <div id="single-summary">
+                            <p>Total stake: <span id="single-total-stake">0,00</span> PLN</p>
+                            <p>Potential win: <span id="single-potential-win">0,00</span> PLN</p>
+                        </div>
+
+                        <div id="combo-summary" class="d-none">
+                            <span class="d-flex justify-content-between mb-3">
+                                <input type="number" min="0" step="0.01" class="stake-combo form-control form-control-sm" placeholder="Stake (PLN)">
+                                <span id="combo-total-odds">0,00</span>
+                            </span>
+                            <p>Potential win: <span id="combo-potential-win">0,00</span> PLN</p>
+                        </div>
+
+                        <button class="btn" id="summary-button">Place a bet</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div th:if="${events == null}">
-        <p>No upcoming events at the moment. Please check back later!</p>
-    </div>
-</div>
+
+    <footer class="text-center" id="page-footer">
+        <p>© 2025 WagerWave</p>
+    </footer>
+
+    <!-- Linki do skryptów JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="../js/Main.js" defer></script>
 </body>
 </html>

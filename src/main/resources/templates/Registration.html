@@ -9,8 +9,30 @@
 </head>
 <body>
 
+<!-- Navbar -->
+<nav class="navbar navbar-expand-md navbar-dark">
+    <div class="container-fluid">
+        <div class="navbar-center">
+            <span class="navbar-title">WagerWave</span>
+        </div>
+    </div>
+</nav>
+
+<!-- Dynamiczne komunikaty -->
+<div class="container-fluid info-fluid">
+    <!-- Komunikat sukcesu -->
+    <div id="successRegisterMessage" th:if="${registrationStatus == 'success'}" class="alert alert-success text-center" role="alert">
+        Registration was successful! You can now log in.
+    </div>
+    <!-- Komunikat błędu -->
+    <div id="errorRegisterMessage" th:if="${registrationStatus == 'failed'}" class="alert alert-danger text-center" role="alert">
+        Registration failed.  Please check for errors in the registration form.
+    </div>
+</div>
+
+
 <!-- NIby nie widzi obiektu user a jednak działa nwm jak xd -->
-<div class="container-fluid" id="container">
+<div class="container-fluid cont-fluid" id="container">
     <div class="sign-up">
         <!-- Formularz rejestracji -->
         <form th:action="@{/register}" th:object="${user}" method="POST">
@@ -36,12 +58,21 @@
             <div th:if="${session.error}" class="error-message">
                 <p th:text="${session.error}"></p>
             </div>
-            <input type="email" th:name="username" placeholder="Email" required>
-            <input type="password" th:name="password" placeholder="Password" required>
-            <a href="#" th:href="@{/forgot-password}">Forget Your Password?</a>
-
+            <input type="email" th:name="username" placeholder="Email" >
+            <input type="password" th:name="password" placeholder="Password" >
             <button type="submit">Log In</button>
         </form>
+
+        <!-- Formularz zapomnianego hasła -->
+        <form th:action="@{/forgot-password}" method="POST">
+            <h1 id="passTitle">Forgot Password</h1>
+            <div th:if="${session.message}" class="success-message">
+                <p th:text="${session.message}"></p>
+            </div>
+            <input type="email" id="emailForgetPass" name="emailForgetPass" placeholder="Enter your email" required>
+            <button type="submit" id="sendMailButton">Send new password </button>
+        </form>
+
     </div>
     <div class="switch-container">
         <div class="switch">
