@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -42,44 +44,56 @@ public class HistoryController {
             Wallet wallet = walletService.getWalletForUser(user);
             model.addAttribute("wallet", wallet);
 
-            // Pobieramy zakłady i kupony
-            List<Bet> bets = betsServices.getUserBets(user);
-            List<Coupon> coupons = betsServices.getUserCoupons(user);
+            // --- Pobieramy WSZYSTKIE zakłady i kupony (do bilansu) ---
+            List<Bet> allBets = betsServices.getUserBets(user);
+            List<Coupon> allCoupons = betsServices.getUserCoupons(user);
 
-            // --- Obsługa filtra (jeśli chcesz zachować filtr) ---
-            if (!"ALL".equalsIgnoreCase(filter)) {
-                bets = bets.stream()
-                        .filter(bet -> bet.getResult().name().equalsIgnoreCase(filter))
-                        .toList();
-                coupons = coupons.stream()
-                        .filter(coupon -> coupon.getResult().name().equalsIgnoreCase(filter))
-                        .toList();
-            }
-            model.addAttribute("bets", bets);
-            model.addAttribute("coupons", coupons);
-            model.addAttribute("filter", filter);
+            // --- Sortujemy BETY malejąco po endTime (najnowsze pierwsze) ---
+            allBets.sort(Comparator.comparing(Bet::getEndTime, Comparator.nullsLast(Comparator.reverseOrder())));
+            // Możesz użyć powyższej linijki, aby obsłużyć ewentualne null-endTime.
+            // Jeżeli wiesz, że endTime NIGDY nie jest nullem, wystarczy:
+            // allBets.sort((b1,b2) -> b2.getEndTime().compareTo(b1.getEndTime()));
 
-            // --- Wyliczmy prosty bilans ---
-            // Suma stawek
-            BigDecimal totalStake = bets.stream()
+            // --- Sortujemy KUPONY malejąco po endTime ---
+            allCoupons.sort(Comparator.comparing(Coupon::getEndTime, Comparator.nullsLast(Comparator.reverseOrder())));
+
+            // --- Wyliczamy bilans w oparciu o WSZYSTKIE bety ---
+            BigDecimal totalStakeAll = allBets.stream()
                     .map(Bet::getStake)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            // Suma wygranych (tylko te bety z wynikiem WON)
-            BigDecimal totalWon = bets.stream()
-                    .filter(bet -> bet.getResult() == BetResult.WON) // Upewnij się, że w enumie jest WON
+            BigDecimal totalWonAll = allBets.stream()
+                    .filter(bet -> bet.getResult() == BetResult.WON)
                     .map(Bet::getPotentialWin)
                     .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            // Różnica między wygraną a postawioną kwotą
-            BigDecimal netProfit = totalWon.subtract(totalStake);
+            BigDecimal netProfitAll = totalWonAll.subtract(totalStakeAll);
 
-            // Wkładamy do modelu, by wyświetlić w widoku
-            model.addAttribute("totalStake", totalStake);
-            model.addAttribute("totalWon", totalWon);
-            model.addAttribute("netProfit", netProfit);
+            // --- Filtrowanie listy do wyświetlenia (tabela) ---
+            List<Bet> filteredBets = allBets;
+            List<Coupon> filteredCoupons = allCoupons;
+
+            if (!"ALL".equalsIgnoreCase(filter)) {
+                filteredBets = filteredBets.stream()
+                        .filter(bet -> bet.getResult().name().equalsIgnoreCase(filter))
+                        .collect(Collectors.toList());
+
+                filteredCoupons = filteredCoupons.stream()
+                        .filter(coupon -> coupon.getResult().name().equalsIgnoreCase(filter))
+                        .collect(Collectors.toList());
+            }
+
+            // --- Dodaj do modelu przefiltrowane listy ---
+            model.addAttribute("bets", filteredBets);
+            model.addAttribute("coupons", filteredCoupons);
+            model.addAttribute("filter", filter);
+
+            // --- Dodaj do modelu bilans (z całej listy) ---
+            model.addAttribute("totalStake", totalStakeAll);
+            model.addAttribute("totalWon", totalWonAll);
+            model.addAttribute("netProfit", netProfitAll);
         });
 
         return "History";

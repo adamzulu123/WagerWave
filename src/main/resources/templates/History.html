@@ -12,19 +12,39 @@
             integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
             crossorigin="anonymous">
 
-    <!-- Google Fonts (opcjonalnie, dla ładniejszej typografii) -->
+    <!-- Google Fonts (opcjonalnie) -->
     <link
             href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
             rel="stylesheet">
 
-    <!-- Główny plik CSS -->
+    <!-- Plik CSS -->
     <link href="../css/History.css" rel="stylesheet">
 
     <style>
-        /* Styl dla sformatowanych dat (jeśli chcesz dodatkowego wyróżnienia) */
+        /* Dodatkowe style lub nadpisanie na potrzeby kart */
         .formatted-date {
             font-size: 0.9rem;
             color: #555;
+        }
+
+        /* Karta pojedynczego zakładu (bez kuponu) */
+        .single-bet-item {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        /* Karta kuponu */
+        .coupon-item {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        /* Szczegóły kuponu (po rozwinięciu) */
+        .coupon-bet-details {
+            background-color: #f8f9fa; /* jasne tło dla odróżnienia */
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -35,8 +55,10 @@
     <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/Main}">WagerWave</a>
 
-        <!-- Hamburger button (widoczny na mniejszych ekranach) -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <!-- Hamburger button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav"
+                aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -52,7 +74,7 @@
             </ul>
 
             <!-- Prawa część menu (kwota i imię) -->
-            <ul class="navbar-nav ms-auto"> <!-- Dodano ms-auto do wypozycjonowania po prawej stronie -->
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item" id="wallet">
                     <a class="nav-link" th:href="@{/Account#wallet}">
                         <img src="../images/Wallet.png" alt="wallet">
@@ -60,9 +82,11 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle"
+                       href="#" id="userDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="../images/User.png" alt="user">
-                        <span th:text="${user.firstName}+' '+${user.lastName}"> User Name</span>
+                        <span th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" th:href="@{/Account}">My account</a></li>
@@ -113,121 +137,110 @@
     </a>
 </div>
 
-<!-- Main content -->
+<!-- Główna część historii -->
 <div class="container mb-5">
     <div class="bets-history-container p-4 rounded shadow-sm">
         <h2 class="text-center">Your Bet History</h2>
 
-        <!-- Jeśli brak zakładów -->
-        <div th:if="${#lists.isEmpty(bets)}" class="no-bets text-center my-3">
+        <!-- Jeśli brak zakładów (i kuponów) -->
+        <div th:if="${#lists.isEmpty(bets) and #lists.isEmpty(coupons)}"
+             class="no-bets text-center my-3">
             <p class="text-muted">No bets placed yet.</p>
         </div>
 
-        <!-- Sekcja zakładów bez kuponów -->
-        <div class="table-responsive mb-4" th:if="${!#lists.isEmpty(bets)}">
+        <!-- Sekcja zakładów indywidualnych (bez kuponu) -->
+        <div th:if="${!#lists.isEmpty(bets)}">
             <h3 class="custom-h3">Individual Bets</h3>
-            <table class="table table-striped table-bordered align-middle bets-table mt-3">
-                <thead>
-                <tr>
-                    <th>Event Name</th>
-                    <th>End Time</th>
-                    <th>Stake (PLN)</th>
-                    <th>Odds</th>
-                    <th>Potential Win (PLN)</th>
-                    <th>Result</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="bet : ${bets}" th:if="${bet.coupon == null}">
-                    <td th:text="${bet.event.eventName}">Event Name</td>
-                    <td class="formatted-date" th:text="${#temporals.format(bet.endTime, 'HH:mm dd-MM-yyyy')}">End Time</td>
-                    <td th:text="${bet.stake}">0.00</td>
-                    <td th:text="${bet.odds}">0.00</td>
-                    <td th:text="${bet.potentialWin}">0.00</td>
-                    <td th:text="${bet.result}">PENDING</td>
-                </tr>
-                </tbody>
-            </table>
+            <!-- Iteracja po betach (już posortowanych w kontrolerze) -->
+            <div th:each="bet : ${bets}"
+                 th:if="${bet.coupon == null}"
+                 class="single-bet-item my-3 p-3">
+                <p><strong>Event Name:</strong>
+                    <span th:text="${bet.event.eventName}">Event Name</span>
+                </p>
+                <p><strong>End Time:</strong>
+                    <span class="formatted-date"
+                          th:text="${#temporals.format(bet.endTime, 'HH:mm dd-MM-yyyy')}">
+                          00:00 01-01-2025
+                    </span>
+                </p>
+                <p><strong>Stake (PLN):</strong>
+                    <span th:text="${bet.stake}">0.00</span>
+                </p>
+                <p><strong>Odds:</strong>
+                    <span th:text="${bet.odds}">0.00</span>
+                </p>
+                <p><strong>Potential Win (PLN):</strong>
+                    <span th:text="${bet.potentialWin}">0.00</span>
+                </p>
+                <p><strong>Result:</strong>
+                    <span th:text="${bet.result}">PENDING</span>
+                </p>
+            </div>
         </div>
 
         <!-- Sekcja kuponów -->
-        <div class="table-responsive mb-4" th:if="${!#lists.isEmpty(coupons)}">
+        <div th:if="${!#lists.isEmpty(coupons)}">
             <h3 class="custom-h3">Coupons</h3>
-            <table class="table table-striped table-bordered align-middle coupons-table mt-3">
-                <thead>
-                <tr>
-                    <th>Coupon ID</th>
-                    <th>End Time</th>
-                    <th>Total Odds</th>
-                    <th>Stake (PLN)</th>
-                    <th>Potential Win (PLN)</th>
-                    <th>Result</th>
-                    <th>Options</th>
-                </tr>
-                </thead>
-                <tbody>
-                <!-- Pętla po kuponach -->
-                <tr th:each="coupon : ${coupons}">
-                    <!-- Dane kuponu -->
-                    <td th:text="${coupon.id}">Coupon ID</td>
-                    <td class="formatted-date" th:text="${#temporals.format(coupon.endTime, 'HH:mm dd-MM-yyyy')}">End Time</td>
-                    <td th:text="${coupon.odds}">0.00</td>
-                    <td th:text="${coupon.stake}">0.00</td>
-                    <td th:text="${coupon.potentialWin}">0.00</td>
-                    <td th:text="${coupon.result}">Result</td>
-                    <td>
-                        <!-- Przycisk rozwijania szczegółów kuponu -->
-                        <button class="btn btn-primary btn-sm"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                th:data-bs-target="'#coupon-details-' + ${coupon.id}">
-                            Show Bets
-                        </button>
-                    </td>
-                </tr>
-                <!-- Szczegóły kuponu - zakłady (w tym samym wierszu co kupon) -->
-                <tr th:each="coupon : ${coupons}">
-                    <td colspan="7">
-                        <div th:id="'coupon-details-' + ${coupon.id}" class="collapse">
-                            <!-- Zawartość szczegółów kuponu w postaci karty -->
-                            <div class="card mt-3">
-                                <div class="card-header">
-                                    <h5 class="mb-0">Coupon Details</h5>
-                                </div>
-                                <div class="card-body">
-                                    <h6>Event Bets</h6>
-                                    <table class="table table-striped table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th>Event Name</th>
-                                            <th>End Time</th>
-                                            <th>Odds</th>
-                                            <th>Result</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <!-- Zakłady związane z danym kuponem -->
-                                        <tr th:each="bet : ${bets}" th:if="${bet.coupon != null and bet.coupon.id == coupon.id}">
-                                            <td th:text="${bet.event.eventName}">Event Name</td>
-                                            <td class="formatted-date"
-                                                th:text="${#temporals.format(bet.endTime, 'HH:mm dd-MM-yyyy')}">
-                                                End Time
-                                            </td>
-                                            <td th:text="${bet.odds}">0.00</td>
-                                            <td th:text="${bet.result}">PENDING</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div> <!-- card-body -->
-                            </div> <!-- card -->
-                        </div> <!-- collapse -->
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <!-- Iteracja kuponów (już posortowanych w kontrolerze) -->
+            <div th:each="coupon : ${coupons}"
+                 class="coupon-item my-3 p-3">
+                <!-- Usunięto Coupon ID -->
+                <p><strong>End Time:</strong>
+                    <span class="formatted-date"
+                          th:text="${#temporals.format(coupon.endTime, 'HH:mm dd-MM-yyyy')}">
+                          00:00 01-01-2025
+                    </span>
+                </p>
+                <p><strong>Total Odds:</strong>
+                    <span th:text="${coupon.odds}">0.00</span>
+                </p>
+                <p><strong>Stake (PLN):</strong>
+                    <span th:text="${coupon.stake}">0.00</span>
+                </p>
+                <p><strong>Potential Win (PLN):</strong>
+                    <span th:text="${coupon.potentialWin}">0.00</span>
+                </p>
+                <p><strong>Result:</strong>
+                    <span th:text="${coupon.result}">PENDING</span>
+                </p>
+
+                <!-- Przycisk rozwinięcia szczegółów kuponu -->
+                <button class="btn btn-success btn-sm mt-2"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        th:data-bs-target="'#coupon-details-' + ${coupon.id}">
+                    Show Bets
+                </button>
+
+                <!-- Szczegóły zakładów w kuponie (po rozwinięciu) -->
+                <div th:id="'coupon-details-' + ${coupon.id}" class="collapse mt-3">
+                    <!-- Iteracja po TEJ SAMEJ liście bets (też posortowanych),
+                         ale wyświetlamy tylko te pasujące do kuponu -->
+                    <div th:each="bet : ${bets}"
+                         th:if="${bet.coupon != null and bet.coupon.id == coupon.id}"
+                         class="coupon-bet-details p-2 my-1">
+                        <p><strong>Event Name:</strong>
+                            <span th:text="${bet.event.eventName}">Event Name</span>
+                        </p>
+                        <p><strong>End Time:</strong>
+                            <span class="formatted-date"
+                                  th:text="${#temporals.format(bet.endTime, 'HH:mm dd-MM-yyyy')}">
+                                  00:00 01-01-2025
+                            </span>
+                        </p>
+                        <p><strong>Odds:</strong>
+                            <span th:text="${bet.odds}">0.00</span>
+                        </p>
+                        <p><strong>Result:</strong>
+                            <span th:text="${bet.result}">PENDING</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Sekcja bilansu -->
+        <!-- Sekcja bilansu (bez zmian) -->
         <div class="container text-center my-4">
             <div class="row justify-content-center">
                 <div class="col-12 col-md-6 balance-info p-4 rounded shadow-sm">
@@ -241,7 +254,7 @@
     </div>
 </div>
 
-<!-- Bootstrap JS -->
+<!-- Bootstrap JS (zawiera również skrypty do collapse) -->
 <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-..."
