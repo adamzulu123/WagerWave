@@ -1,29 +1,33 @@
 /* Podstawowy styl dla body */
 body {
+    margin: 0;
+    padding: 0;
     font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    /* Tło z gradientem */
     background: linear-gradient(130deg, rgba(2, 61, 84, 1) 0%, rgba(46, 139, 87, 1) 35%, rgba(255, 255, 102, 1) 100%);
-    background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-size: 100vw 100vh;
-    padding-top: 86px;
+    background-size: cover;
 }
 
-/* Ustawienia nawigacji */
+/* Główna zawartość, żeby nie chowała się pod navbarem */
+.main-content {
+    margin-top: 86px;
+}
+
+/* Navbar – zawsze fixed na górze */
 .navbar {
-    background-color: #1b7843;
-    color: white;
-    z-index: 10;
-    box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.7);
-    position: fixed;
-    width: 100%;
+    position: fixed !important;
     top: 0;
     left: 0;
+    width: 100%;
+    z-index: 9999;
+    background-color: #1b7843;
+    color: white;
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.7);
 }
 
+/* Navbar brand */
 .navbar-brand {
     color: white;
     font-weight: bolder;
@@ -31,105 +35,103 @@ body {
     font-size: x-large;
     transition-duration: 0.3s;
 }
-
 .navbar-brand:hover {
     color: white;
     transform: scale(1.05);
     transition-duration: 0.3s;
 }
 
+/* Linki w nawigacji */
 .navbar-nav .nav-link {
     color: white;
 }
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-}
-
-.nav-link:hover{
+.nav-link:hover {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 5px;
 }
-
 .nav-item.active {
     font-weight: bold;
 }
-
 .nav-item img {
     height: 25px;
     width: auto;
     margin-right: 8px;
     margin-bottom: 3px;
 }
-
 #bets, #wallet {
     margin-left: 1.5rem;
     margin-right: 1.5rem;
 }
 
+/* Menu rozwijane (dropdown) */
 .dropdown-menu {
     z-index: 1000;
     background-color: #1b7843;
     text-align: center;
 }
-
 #userDropdown.show {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 5px;
     color: white;
 }
-
 .dropdown-item {
     color: white;
 }
-
 .dropdown-item:hover {
     background-color: rgba(255, 255, 255, 0.1);
     color: white;
 }
 
-/*
-Main Part
-*/
-/* Sekcja filtrów */
+/* Filtry */
 .filter-section {
-    background-color: rgb(164, 211, 185, 0.3);
+    background-color: rgba(164, 211, 185, 0.3);
     padding: 10px;
     border-radius: 8px;
     text-align: center;
 }
-
-.filter-options {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
+.filter-section h5 {
+    color: #fff; /* Biały nagłówek */
 }
 
-.filter-option {
-    cursor: pointer;
-    padding: 5px 15px;
-    border-radius: 20px;
+/* Przyciski filtrów (zamiast outline – pełne tło) */
+.filter-btn {
+    margin: 0 4px;
     font-weight: bold;
-    color: #fff;
-    transition: background-color 0.3s, transform 0.3s;
+    transition: transform 0.3s, opacity 0.3s;
+    opacity: 0.9;
+}
+.filter-btn:hover {
+    opacity: 1;
+    transform: scale(1.06);
 }
 
-.filter-option:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-    transform: scale(1.1);
+/* Przykładowe style dla każdego filtra */
+.filter-btn.btn-dark {
+    background-color: #2C3E50 !important;
+    color: #fff !important;
+    border-color: #2C3E50 !important;
 }
-
+.filter-btn.btn-warning {
+    background-color: #f1c40f !important;
+    color: #222 !important;
+    border-color: #f1c40f !important;
+}
+.filter-btn.btn-success {
+    background-color: #27ae60 !important;
+    color: #fff !important;
+    border-color: #27ae60 !important;
+}
+.filter-btn.btn-danger {
+    background-color: #c0392b !important;
+    color: #fff !important;
+    border-color: #c0392b !important;
+}
 .active-filter {
-    color: #1b7843;
+    opacity: 1 !important;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
 }
 
-
-
-
-
-/* Bets history*/
+/* Kontener historii */
 .bets-history-container {
     background-color: rgba(164, 211, 185, 0.3);
     padding: 20px;
@@ -137,206 +139,144 @@ Main Part
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 60px;
 }
-
 .bets-history-container h2 {
     margin-bottom: 20px;
     font-size: 1.7rem;
     font-weight: bold;
     text-transform: uppercase;
-    color: black;
-    text-align: center;
-}
-
-/* Table styling */
-.bets-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: hsl(0, 0%, 100%);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.bets-table thead {
-    background-color: #2c3e50;
     color: #fff;
-    text-transform: uppercase;
-}
-
-.bets-table th,
-.bets-table td {
-    padding: 10px 15px;
     text-align: center;
-    border-bottom: 1px solid #ddd;
 }
 
-.bets-table th{
-    color: rgba(2, 61, 84, 1);
-}
-.bets-table td {
-    font-size: smaller;
-}
-
-
-.bets-table tbody tr:hover {
-    background-color: rgba(44, 62, 80, 0.1);
-    transition: background-color 0.3s;
-}
-
-.bets-table .text-success {
-    color: seagreen;
-    font-weight: bold;
-}
-
-.bets-table .text-danger {
-    color: darkred;
-    font-weight: bold;
-}
-
-.bets-table .text-warning {
-    color: #f39c12;
-    font-weight: bold;
-}
-
-
-/* Table styling for Coupons */
-.coupons-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: hsl(0, 0%, 100%);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.coupons-table thead {
-    background-color: #2c3e50;
-    color: #fff;
-    text-transform: uppercase;
-}
-
-.coupons-table th,
-.coupons-table td {
-    padding: 10px 15px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-}
-
-.coupons-table th {
-    color: rgba(2, 61, 84, 1);
-}
-
-.coupons-table td {
-    font-size: smaller;
-}
-
-.coupons-table tbody tr:hover {
-    background-color: rgba(44, 62, 80, 0.1);
-    transition: background-color 0.3s;
-}
-
-.coupons-table .text-success {
-    color: seagreen;
-    font-weight: bold;
-}
-
-.coupons-table .text-danger {
-    color: darkred;
-    font-weight: bold;
-}
-
-.coupons-table .text-warning {
-    color: #f39c12;
-    font-weight: bold;
-}
-
+/* Nagłówek dla sekcji (np. "Individual Bets", "Coupons") */
 .custom-h3 {
     font-size: 1.2rem;
     font-weight: bold;
-    color: #2c3e50;
-}
-
-
-
-
-/* Balans style */
-footer {
-    background-color: rgb(164, 211, 185, 0.3);
-    padding: 15px 20px;
-    border-radius: 8px;
     color: #fff;
+    margin-top: 25px;
 }
 
-footer .btn-success {
-    font-weight: bold;
-    font-size: 1rem;
+/* Karty pojedynczych betów i kuponów (efekt hover) */
+.single-bet-item,
+.coupon-item {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.single-bet-item:hover,
+.coupon-item:hover {
+    transform: scale(1.01);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-footer .btn-success:hover {
-    background-color: #28a745;
-    color: white;
-}
-
-/* Ikony */
-.bi {
-    font-size: 1.5rem;
+/* Szczegóły kuponu (po rozwinięciu) */
+.coupon-bet-details {
+    background-color: #f8f9fa;
+    border-radius: 5px;
 }
 
 .balance-info {
-    background-color: rgba(164, 211, 185, 0.3);
-    color: #000;
-    font-weight: bold;
+    /* Przezroczyste tło w stylu "glass" */
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 1rem;
+
+    /* Cień, aby nadać efekt "karty" */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+
+    /* Tekst i wewnętrzne odstępy */
+    color: #fff;       /* Zachowujemy białą czcionkę */
+    font-weight: bold; /* Podkreślamy sekcję */
+    padding: 1.5rem;   /* Większy odstęp wewnętrzny */
+    position: relative; /* Umożliwia ewentualne pseudo-elementy */
+    text-align: center; /* Wyrównanie tekstu do środka */
 }
 
-/* Media queries */
+/* Styl samego nagłówka sekcji bilansu */
+.balance-info h5 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+
+    /* Dodatkowa "etykieta" */
+    display: inline-block;
+    padding: 0.4rem 1.2rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.balance-info p {
+    color: #fff;
+    margin: 0.5rem 0;
+    font-weight: normal; /* Dla czytelności: paragrafy zwykłe, a wartości pogrubione */
+}
+
+/* Możesz też wyróżnić wartości (np. <strong>) w inny sposób */
+.balance-info strong {
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* Dodatek – delikatny ozdobny pasek u góry lub z boku */
+.balance-info::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0.4),
+            rgba(255, 255, 255, 0.1)
+    );
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+/* Responsywność */
 @media (max-width: 768px) {
+    /* W wersji mobilnej – najlepiej zachować navbar fixed.
+       Możesz ewentualnie usunąć/zmienić position,
+       jeśli chcesz innego zachowania. */
     .navbar {
-        position: relative;
+        position: fixed !important;
     }
-
-    .navbar-collapse {
-        align-items: center;
-    }
-
     .navbar-toggler {
         border: none;
     }
-
     .nav-item {
         text-align: center;
         display: block;
     }
-
     .nav-link {
         display: block;
     }
-
     .nav-item.active {
         font-weight: normal;
     }
-
-    #bets, #wallet {
+    #bets,
+    #wallet {
         margin-left: 0;
         margin-right: 0;
     }
-
     .dropdown-menu {
         background-color: #178848;
         text-align: center;
     }
 
-    .categories-box {
-        margin-left: 0;
-        margin-right: 0;
+    .bets-history-container h2 {
+        font-size: 1.4rem;
     }
-
-    .accordion-body a {
-        font-size: 1.2rem;
+    .custom-h3 {
+        font-size: 1.1rem;
     }
-
-    .events-container {
-        margin-top: 15px;
+    .single-bet-item,
+    .coupon-item {
+        padding: 10px;
+    }
+    .balance-info p {
+        margin: 0;
     }
 }
