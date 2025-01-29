@@ -59,7 +59,7 @@ The project was developed using followed technologies:
   - Integrating third-party APIs (e.g., API-Basketball) to fetch live available matches and their results, as well as implementing RESTful APIs for bet creation, match fetching, and updating bet results and coupons based on live match data from API-Basketball.
   - Security: Implementation of Spring Security for user authentication and authorization.
   - Email system: Configuring and managing SMTP Gmail for sending system emails (e.g., password recovery).
-  - Front-end for: Registration, Account, Deposit, Withdrawal pages. 
+  - Front-end: Registration, Account, Deposit, Withdrawal pages. 
   - Database management: Handling all database operations (except schema, documentation, and models), including managing data retrieval, updates, and optimization of queries for efficient performance.
 
 
